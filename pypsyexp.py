@@ -21,6 +21,18 @@ import pygame
 from pygame.locals import *
 import tempfile
 from time import sleep
+import numpy as np
+import numpy.numarray as na
+from scipy import ndimage
+from array import *
+
+#------------------------------------------------------------
+# Useful RGB values
+#------------------------------------------------------------
+white = (255, 255, 255)
+blue = (0, 0, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
 
 #------------------------------------------------------------
 # MouseButton Class
@@ -207,7 +219,7 @@ class Experiment:
         return self.show_image(imagename, bgcolor, 0, 0)
 
     #------------------------------------------------------------
-    # show_image
+    # show_image (for backward compatiblilty)
     #------------------------------------------------------------
     def show_image(self, imagename, bgcolor, xoffset, yoffset):
         """docstring for show_image"""
@@ -224,6 +236,27 @@ class Experiment:
         image_rect.centerx = background.get_rect().centerx + xoffset
         image_rect.centery = background.get_rect().centery + yoffset
         print image_rect.center
+        background.blit(image,image_rect)
+        return background
+    
+    #------------------------------------------------------------
+    # show_image_add
+    #
+    #  This can be deleted
+    #
+    #------------------------------------------------------------    
+    def show_image_add(self, background, imagename, xoffset, yoffset):
+        # this is the same as show_image in the library with the
+        # exception of some statements
+        # if we add the bg color when calling this we can use the library function
+        
+        size = self.screen.get_size()
+        
+        image = self.resources[imagename]
+        image_rect = image.get_rect()
+        image_rect.centerx = background.get_rect().centerx + xoffset
+        image_rect.centery = background.get_rect().centery + yoffset
+        
         background.blit(image,image_rect)
         return background
  
@@ -322,7 +355,52 @@ class Experiment:
             textpos.centerx = background.get_rect().centerx + xoff
             textpos.centery = background.get_rect().centery + yoff
             return textpos
+            
+    #------------------------------------------------------------
+    # setup_gabor
+    #------------------------------------------------------------
+    def setup_gabor(self, grid_w, grid_h, windowsd):
+        self.gabor_w = grid_w
+        self.gabor_h = grid_h
+        self.windowsd = windowsd
+        self.centerx= self.gabor_w/2
+        self.centery = self.gabor_h/2        
+        normalization=self.bivariate_normpdf(self.centerx,self.centery,self.windowsd,self.windowsd,self.centerx,self.centery,1.0)
+        self.gabor_window = np.array([[ [self.bivariate_normpdf(i,j,self.windowsd,self.windowsd,self.centerx,self.centery,1.0)/normalization]*3 for j in range(self.gabor_w)] for i in range(self.gabor_h)],na.Float64)
 
+    #------------------------------------------------------------
+    # draw_gabor
+    #------------------------------------------------------------
+    def draw_gabor(self, freq, angle, scale):
+        
+        gabor_surface = pygame.Surface([self.gabor_w,self.gabor_h], SRCALPHA)
+        gabor_surface.fill(white)
+        
+        pixarray = pygame.surfarray.pixels3d(gabor_surface)
+        pixrgb = np.array(pixarray)
+        pixrgb[:,:,:]=0
+        sinewavematrix = np.array([[ [((sin(degrees(j)/freq)+1)/2) * 255.0]  for j in range(self.gabor_w)]] * self.gabor_h) # to run faster, only compute the sine wave once
+        finalimg = self.gabor_window * sinewavematrix
+        finalimg = [[array('I', item) for item in line] for line in finalimg.tolist()]
+        pixarray[:] = finalimg[:]
+        # rotate
+        gabor_surface.unlock()
+        #pygame.surfarray.blit_array(gabor_surface, stimulus)
+        #gabor_surface.blit(gabor_surface, [0,0])
+        gabor_surface = pygame.transform.rotozoom(gabor_surface, angle, scale)
+        # adjusts for the increase in size do to rotation
+        gabor_rect = gabor_surface.get_rect()
+        surf = pygame.Surface([gabor_rect.w, gabor_rect.h])
+        surf_rect = surf.get_rect()
+        surf.blit(gabor_surface, surf_rect) # returns a larger surface
+        return surf
+        
+    #------------------------------------------------------------
+    # bivariate_normpdf
+    #------------------------------------------------------------
+    def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul,fwhm=False):
+        return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
+        
     #------------------------------------------------------------
     # on_exit
     #------------------------------------------------------------
