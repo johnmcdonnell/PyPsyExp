@@ -36,6 +36,8 @@ red = (255, 0, 0)
 
 #------------------------------------------------------------
 # MouseButton Class
+# Creates a Rect objects on initialization. Supports for 
+# collidepoint method
 #------------------------------------------------------------
 class MouseButton:
     """Button class based on the
@@ -53,10 +55,16 @@ class MouseButton:
 # General purpose Experiment class
 #------------------------------------------------------------
 class Experiment:
-    """docstring for Experiment"""
+    """The experiment class is a general purpose class."""
     
     #------------------------------------------------------------
     # __init__
+    # Init takes three values:
+    # laptop - boolean
+    #   if laptop is True, the display created will be windowed. If false, the display will be
+    #   fullscreen.
+    # screenres - 2 value tuple or list representing pixel dimensions
+    # experimentname - string that will be displayed as the title of the new window
     #------------------------------------------------------------    
     def __init__(self, laptop, screenres, experimentname):
         pygame.init()
@@ -73,6 +81,11 @@ class Experiment:
 
     #------------------------------------------------------------
     # load_all_resources
+    # Accepts one or two values:
+    # img_directory - path to the folder containing images
+    #   calls load_all_images
+    # snd_directory - path to the folder containing sounds. empty by default. 
+    #   calls load_all_sounds if a path is passed. 
     #------------------------------------------------------------    
     def load_all_resources(self, img_directory, snd_directory=""):
         self.load_all_images(img_directory)
@@ -83,7 +96,10 @@ class Experiment:
     # load_all_images
     #------------------------------------------------------------
     def load_all_images(self, directory):
-        """docstring for load_all_images"""
+        """load_all_images takes 1 value, the path to an images folder.
+           The function filters out 'Thumbs.db' files (in the case of Mac's) and
+           hidden system files. All images are placed in a list called 'self.resources'. 
+           All images must be referenced by name, i.e. self.resources['image1.gif']. """
         # drop all . files
         files = filter(lambda x: x[0] != ".", os.listdir(os.path.join(os.curdir, directory)))
         files = filter(lambda x: x != 'Thumbs.db', files)
@@ -95,7 +111,10 @@ class Experiment:
     # load_all_sounds
     #------------------------------------------------------------
     def load_all_sounds(self, directory):
-        """docstring for load_all_sounds"""
+        """load_all_sounds takes one value, the path to the folder containing sound files. 
+            The function filters out 'Thumbs.db' files (in the case of Mac's and hidden 
+            system files. All sounds are placed in a list called 'self.resources'. All
+            sounds must be referenced by name, i.e. self.resources['sound1.wav'].play """
         files = filter(lambda x: x[0] != '.', os.listdir(os.path.join(os.curdir, directory)))
         files = filter(lambda x: x != 'Thumbs.db', files)
         full_path_files = map( lambda x: os.path.join(os.curdir, directory, x), files)
@@ -106,6 +125,10 @@ class Experiment:
     # load_image
     #------------------------------------------------------------
     def load_image(self, fullname, colorkey=None):
+        """load_image attempts to load an image from the path passed to it in 
+        'fullname', else an error is generated and the system exits. If colorkey 
+        is not None, then the color passed will be made transparent. If colorkey = -1, 
+        then the RGB value in the top left-most pixel of the image will be set as the colorkey"""
         try:
             image = pygame.image.load(fullname)
         except pygame.error, message:
@@ -122,6 +145,13 @@ class Experiment:
     # get_cond_and_subj_number
     #------------------------------------------------------------
     def get_cond_and_subj_number(self, filename):
+        """get_cond_and_subj_number reads a 'filename' that must contain at least 3 values:
+           1) Condition current subject will be in
+           2) Number of conditions
+           3) Current subject number (automatically updated)
+           
+           After reading the textfile, the condition number and subject number are 
+           automatically updated and written back into the file for subsequent runnings """
         t = []
         myfile = open(filename,'r')
         # read lines into t
@@ -146,6 +176,12 @@ class Experiment:
     # get_cond_and_subj_number_ftp
     #------------------------------------------------------------
     def get_cond_and_subj_number_ftp(self, host, username, password, filename):
+        """Similar functionallity to get_cond_and_subj_number. get_cond_and_subj_number_ftp
+           reads data from a remote ftp client in order to set up participant numbers and 
+           conditions. 
+           host - web address of file hosting site
+           username - account name on the host site
+           password - password for the account """
         t = []
         ftp = FTP(host, username, password) # connect to ftp host
         ftp.retrlines('RETR ' + filename, t.append) # get lines
@@ -165,7 +201,7 @@ class Experiment:
     #------------------------------------------------------------
     ## check to see if you can set netfilename to filename as a default
     def upload_data(self, host, username, password, filename, netfilename):
-        """docstring for upload_data"""
+        """Uploads data to a file storage site."""
         myfile = open(filename)
         ftp = FTP(host, username, password) # connect to ftp host
         ftp.storlines('STOR ' + netfilename, myfile)
@@ -175,6 +211,8 @@ class Experiment:
     # update_display
     #------------------------------------------------------------
     def update_display(self, mysurf):
+        """Blits the surface passed to the default display screen created by 
+        the experiment class. Then flips it. """
         self.screen.blit(mysurf, (0,0))
         pygame.display.flip()
 
@@ -182,28 +220,55 @@ class Experiment:
     # place_text_image
     #------------------------------------------------------------
     def place_text_image(self, mysurf, prompt, size, xoff, yoff, txtcolor, bgcolor):
+        """Blits a text object to the surface passed.
+            mysurf - Surface object to be blitted to
+            prompt - String to be displayed
+            size - text size
+            xoff/yoff - center offsets
+            txtcolor - color of the test (RGB)
+            bgcolor - color of the background (RGB) """
         text = self.get_text_image(pygame.font.Font(None, size), prompt, txtcolor, bgcolor)
-        textpos = text.get_rect()
-        textpos.centerx = mysurf.get_rect().centerx + xoff
-        textpos.centery = mysurf.get_rect().centery + yoff
+        textpos = self.placing_rect(mysurf, text, xoff, yoff)
         mysurf.blit(text, textpos)
 
     #------------------------------------------------------------
     # get_text_image
     #------------------------------------------------------------
     def get_text_image(self, font, message, fontcolor, bg):
-        base = font.render(message, 1, fontcolor)
+        """ Creates a Surface with anti-aliased text written on it, and returns it.
+            font - Font object
+            message - string to be displayed
+            fontcolor - color for text (RGB)
+            bg - color for the background """
+        base = font.render(message, 1, fontcolor, bg)
         size = base.get_width(), base.get_height()
         img = pygame.Surface(size, 16)
         img = img.convert()
-        img.fill(bg)
         img.blit(base, (0, 0))
         return img
-
+    
+    #------------------------------------------------------------
+    # placing_text
+    # I revised this to work with place_text_image
+    #------------------------------------------------------------
+    def placing_rect(self, bkgd_surf, inner_surf, xoff, yoff):
+        """ Creates a Rect from Surface 'inner_surf' and centers it based
+            on Surface 'bkgd_surf'. Returns the Rect made """
+        rect = inner_surf.get_rect()
+        rect.centerx = bkgd_surf.get_rect().centerx + xoff
+        rect.centery = bkgd_surf.get_rect().centery + yoff
+        return rect
+        
     #------------------------------------------------------------
     # play_sound
     #------------------------------------------------------------
+    # Do we want it to return the "play time"?
     def play_sound(self, sndname, pause):
+        """ Plays a sound file for its length plus and length 'pause' in milliseconds.
+            This function works with .wav files only. This pauses the timer as well
+            sndname - String with the sound name (omit the .wav extension)
+            pause - time in milliseconds to pause the pygame timer (added to the length of
+            time of the sound file)  """
         fileindex = sndname + ".wav"
         time_stamp = pygame.time.get_ticks()
         self.resources[fileindex].play()
@@ -216,83 +281,89 @@ class Experiment:
     # show_centered_image
     #------------------------------------------------------------
     def show_centered_image(self, imagename, bgcolor):
+        """Centers an image in the screen with a given bgcolor (RGB) """
         return self.show_image(imagename, bgcolor, 0, 0)
 
     #------------------------------------------------------------
     # show_image (for backward compatiblilty)
     #------------------------------------------------------------
     def show_image(self, imagename, bgcolor, xoffset, yoffset):
-        """docstring for show_image"""
+        """ Creates Surface object with the dimensions of the display screen. Then 
+        blits an image to the center of the Surface plus any offseting height/width. 
+        The Surface is then returned. 
+        
+        imagename - name of the image file loaded by load_image (or load_all_images)
+        bgcolor - color of the surface
+        xoffset/offset - offsets relative to the center of the Surface
+        
+        Note: This CREATES a Surface object, whereas show_image_add is passed a Surface
+        to be blitted on"""
         size = self.screen.get_size()
-        print size
         background = pygame.Surface(size)
         background = background.convert()
         background.fill(bgcolor)
 
-        print background.get_rect().center
-        
         image = self.resources[imagename]
         image_rect = image.get_rect()
         image_rect.centerx = background.get_rect().centerx + xoffset
         image_rect.centery = background.get_rect().centery + yoffset
-        print image_rect.center
+        
         background.blit(image,image_rect)
         return background
     
     #------------------------------------------------------------
-    # show_image_add
-    #
-    #  This can be deleted
-    #
-    #------------------------------------------------------------    
-    def show_image_add(self, background, imagename, xoffset, yoffset):
-        # this is the same as show_image in the library with the
-        # exception of some statements
-        # if we add the bg color when calling this we can use the library function
+    # show_centered_image_add
+    #------------------------------------------------------------
+    def show_centered_image_add(self, mysurf, imagename, bgcolor):
+        """Centers an image in the Surface passed with a given bgcolor (RGB) """
+        return self.show_image_add(mysurf, imagename, 0, 0)     
         
-        size = self.screen.get_size()
+    #------------------------------------------------------------
+    # show_image_add
+    #------------------------------------------------------------
+    def show_image_add(self, mysurf, imagename, xoffset, yoffset):
+        """ Places an image onto a passed Surface with given offsets relative
+        to the center of the Surface. Returns the drawn-on Surface.
+        
+        mysurf - Surface to be blitted to
+        imagename - name of the image file loaded by load_image (or load_all_images)
+        xoffset/offset - offsets relative to the center of the Surface
+        
+        Note: This REQUIRES a Surface object to be passed, whereas show_image creates a Surface
+        to be blitted on  """
         
         image = self.resources[imagename]
         image_rect = image.get_rect()
-        image_rect.centerx = background.get_rect().centerx + xoffset
-        image_rect.centery = background.get_rect().centery + yoffset
+        image_rect.centerx = mysurf.get_rect().centerx + xoffset
+        image_rect.centery = mysurf.get_rect().centery + yoffset
         
-        background.blit(image,image_rect)
-        return background
+        mysurf.blit(image,image_rect)
+        return mysurf
  
     #------------------------------------------------------------
     # clear_screen
+    # This may be more accurate if you pass the actual screen that
+    # need to be cleared and flip it after filling it with a given color
     #------------------------------------------------------------
     def clear_screen(self, color):
-        """docstring for clear_screen"""
+        """ Creates a Surface with the dimensions of the display screen, fills
+        it with a given color, and returns the Surface.  """
         size = self.screen.get_size()
         background = pygame.Surface(size)
         background = background.convert()
         background.fill(color)
-        return background
-
-    #------------------------------------------------------------
-    # show_centered_image_add
-    #------------------------------------------------------------
-    def show_centered_image_add(self, background, imagename, bgcolor):
-        return self.show_image_add(background, imagename, 0, 0) 
-
-    #------------------------------------------------------------
-    # show_image_add
-    #------------------------------------------------------------
-    def show_image_add(self, background, imagename, xoffset, yoffset):
-        """docstring for show_image"""
-        image = self.resources[imagename]
-        image_rect = image.get_rect()
-        image_rect.centerx = background.get_rect().centerx + xoffset
-        image_rect.centery = background.get_rect().centery + yoffset
-        background.blit(image,image_rect)
-        return background
+        return background    
                
     #------------------------------------------------------------
     # get_response_and_rt_pq
     #------------------------------------------------------------
     def get_response_and_rt_pq(self, val):
+        """ Monitors keyboard Events for the 'Q' and 'P' keys. Returns 
+            the time it took from the call to the function to the end of the
+            function (reaction time; rt) and the response made (res).
+            val - list or tuple with coded values, e.g. ['Left', 'Right'] or 
+            (0, 1) """
+        
         time_stamp = pygame.time.get_ticks()
         while 1:
             res = self.get_response()
@@ -311,6 +382,9 @@ class Experiment:
     # get_response
     #------------------------------------------------------------
     def get_response(self):
+        """ Monitors keyboard Events. Converts lowercase input into uppercase
+            based on ASCII codes. Pressing the left Shift and Tilde key (~/`) at the same time 
+            will exit the program. Returns the key pressed. """
         pygame.event.clear()
         if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
             self.on_exit()
@@ -328,6 +402,9 @@ class Experiment:
     # escapable_sleep
     #------------------------------------------------------------
     def escapable_sleep(self, pause):
+        """ Pauses the program for 'pause'-number of milliseconds. Can be exited at anytime
+            by pressing the left Shift and Tilde key (~/`) at the same time  """
+        
         waittime = 0    
         time_stamp = pygame.time.get_ticks()
         while waittime < pause:
@@ -338,28 +415,25 @@ class Experiment:
 
     #------------------------------------------------------------
     # output_trial
+    # not currently in use
     #------------------------------------------------------------
-    def output_trial(self, myline):     
-        print myline
+    def output_trial(self, myline):  
+        """ Writes a line a of data to a file, which each value seperated by a space. """   
         for i in myline:
             self.datafile.write(str(i)+' ')
 
         self.datafile.write('\n')
         self.datafile.flush()
-
-    #------------------------------------------------------------
-    # placing_text
-    #------------------------------------------------------------
-    def placing_text(self, text, xoff, yoff, background):
-            textpos = text.get_rect()
-            textpos.centerx = background.get_rect().centerx + xoff
-            textpos.centery = background.get_rect().centery + yoff
-            return textpos
-            
+        
     #------------------------------------------------------------
     # setup_gabor
     #------------------------------------------------------------
     def setup_gabor(self, grid_w, grid_h, windowsd):
+        """ Sets up initial values for a gabor patch and its gaussian blur
+            grid_w = width
+            grid_h = height 
+            windowsd = standard deviation  """
+        
         self.gabor_w = grid_w
         self.gabor_h = grid_h
         self.windowsd = windowsd
@@ -372,6 +446,19 @@ class Experiment:
     # draw_gabor
     #------------------------------------------------------------
     def draw_gabor(self, freq, angle, scale):
+        """ Draws the gabor patch set by 'setup_gabor' 
+            freq - the frequency of the gabor patch
+            angle - value to determine rotation on the patch
+            scale - enlarges the gabor patch by a given factor
+            
+            * For faster blitting it is recommended to set the grid_w and grid_h 
+            in 'setup_gabor' to be smaller than the actual patch desired. To offset 
+            this, use the scale value to blow up the image. 
+            ** Due to the nature of rotating a Surface, the size of the Surface the gabor patch
+            changes based on the value of the rotation angle. This function re-centers the patch
+            after each rotation, but it should be noted as it will make the area of the Surface
+            larger. """
+
         
         gabor_surface = pygame.Surface([self.gabor_w,self.gabor_h], SRCALPHA)
         gabor_surface.fill(white)
@@ -398,11 +485,14 @@ class Experiment:
     #------------------------------------------------------------
     # bivariate_normpdf
     #------------------------------------------------------------
+    """ Formula used to set the gaussion blur """
+    
     def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul,fwhm=False):
         return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
         
     #------------------------------------------------------------
     # on_exit
+    # Not currently working due to self.datafile being commented out
     #------------------------------------------------------------
     def on_exit(self):
         self.datafile.flush()
