@@ -63,7 +63,7 @@ class Experiment:
     # laptop - boolean
     #   if laptop is True, the display created will be windowed. If false, the display will be
     #   fullscreen.
-    # screenres - 2 value tuple or list representing pixel dimensions
+    # screenres - 2-value tuple or list representing pixel dimensions
     # experimentname - string that will be displayed as the title of the new window
     #------------------------------------------------------------    
     def __init__(self, laptop, screenres, experimentname):
@@ -74,20 +74,29 @@ class Experiment:
             self.screen = pygame.display.set_mode(screenres, HWSURFACE|DOUBLEBUF|FULLSCREEN) 
         pygame.display.set_caption(experimentname)
 
-        #self.filename = "data/%s.dat" % self.subj
-        #self.datafile = open(self.filename, 'w')
         self.trial = 0
         self.resources = {}
 
     #------------------------------------------------------------
     # load_all_resources
-    # Accepts one or two values:
-    # img_directory - path to the folder containing images
-    #   calls load_all_images
-    # snd_directory - path to the folder containing sounds. empty by default. 
-    #   calls load_all_sounds if a path is passed. 
-    #------------------------------------------------------------    
+    #------------------------------------------------------------
+    def set_filename(self, name=None):
+        """ Must be called after the values from get_cond_and_subj_number are determined """
+        if name == None:
+            name = self.subj
+        self.filename = "data/%s.dat" % name
+        
+        self.datafile = open(self.filename, 'w')
+
+    #------------------------------------------------------------
+    # load_all_resources
+    #------------------------------------------------------------        
     def load_all_resources(self, img_directory, snd_directory=""):
+        """ Accepts one or two values:
+                img_directory - path to the folder containing images
+                calls load_all_images
+                snd_directory - path to the folder containing sounds. empty by default. 
+                calls load_all_sounds if a path is passed. """
         self.load_all_images(img_directory)
         if snd_directory != "":
             self.load_all_sounds(snd_directory)
@@ -269,12 +278,11 @@ class Experiment:
             sndname - String with the sound name (omit the .wav extension)
             pause - time in milliseconds to pause the pygame timer (added to the length of
             time of the sound file)  """
-        fileindex = sndname + ".wav"
         time_stamp = pygame.time.get_ticks()
-        self.resources[fileindex].play()
-        pygame.time.wait(int(self.resources[fileindex].get_length()*1000+pause))
+        self.resources[sndname].play()
+        pygame.time.wait(int(self.resources[sndname].get_length()*1000+pause))
         rt = pygame.time.get_ticks() - time_stamp
-        filelen = int(self.resources[fileindex].get_length()*1000)
+        filelen = int(self.resources[sndname].get_length()*1000)
         #print "PLAY TIME  =", rt - filelen
  
     #------------------------------------------------------------
@@ -394,7 +402,7 @@ class Experiment:
                 resp = pygame.key.name(event.key)
                 if (resp > 96 and resp < 123):
                     resp -= 40
-                if (resp == '[1]' or resp=='[2]' or resp=='[3]' or resp=='[4]' or resp=='[5]'):
+                if (resp == '[1]' or resp=='[2]' or resp=='[3]' or resp=='[4]' or resp=='[5]' or resp == '[6]' or resp=='[7]' or resp=='[8]' or resp=='[9]' or resp=='[0]'):
                     resp = resp[1]
                 return resp 
 
@@ -402,7 +410,7 @@ class Experiment:
     # escapable_sleep
     #------------------------------------------------------------
     def escapable_sleep(self, pause):
-        """ Pauses the program for 'pause'-number of milliseconds. Can be exited at anytime
+        """ Pauses the program for 'pause'-number of milliseconds. Can be exited at any time
             by pressing the left Shift and Tilde key (~/`) at the same time  """
         
         waittime = 0    
@@ -472,8 +480,6 @@ class Experiment:
         pixarray[:] = finalimg[:]
         # rotate
         gabor_surface.unlock()
-        #pygame.surfarray.blit_array(gabor_surface, stimulus)
-        #gabor_surface.blit(gabor_surface, [0,0])
         gabor_surface = pygame.transform.rotozoom(gabor_surface, angle, scale)
         # adjusts for the increase in size do to rotation
         gabor_rect = gabor_surface.get_rect()
@@ -484,10 +490,13 @@ class Experiment:
         
     #------------------------------------------------------------
     # bivariate_normpdf
-    #------------------------------------------------------------
-    """ Formula used to set the gaussion blur """
-    
-    def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul,fwhm=False):
+    #------------------------------------------------------------   
+    def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul):
+        """ Formula used to set the gaussion blur 
+            x,y - current position in the grid
+            sigma_x/y - variance in each plane of the grid
+            mu_x/y - mean
+            mul - scales by this amplitude factor """ 
         return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
         
     #------------------------------------------------------------
