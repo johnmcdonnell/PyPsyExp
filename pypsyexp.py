@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-experiment.py
+pypsyexp.py
 
 Created by Todd Gureckis on 2007-03-12.
 Copyright (c) 2007 __Todd Gureckis__. All rights reserved.
@@ -59,14 +59,16 @@ class Experiment:
     
     #------------------------------------------------------------
     # __init__
-    # Init takes three values:
-    # laptop - boolean
-    #   if laptop is True, the display created will be windowed. If false, the display will be
-    #   fullscreen.
-    # screenres - 2-value tuple or list representing pixel dimensions
-    # experimentname - string that will be displayed as the title of the new window
+    #
     #------------------------------------------------------------    
     def __init__(self, laptop, screenres, experimentname):
+        """  Init takes three values:
+                laptop - boolean
+                    if laptop is True, the display created will be windowed. If false, the display will be
+                    fullscreen.
+                screenres - 2-value tuple or list representing pixel dimensions
+                experimentname - string that will be displayed as the title of the new window """
+        
         pygame.init()
         if laptop:
             self.screen = pygame.display.set_mode(screenres, HWSURFACE|DOUBLEBUF)
@@ -81,7 +83,9 @@ class Experiment:
     # load_all_resources
     #------------------------------------------------------------
     def set_filename(self, name=None):
-        """ Must be called after the values from get_cond_and_subj_number are determined """
+        """ Sets and opens file to be written.
+        
+        * Must be called after the values from get_cond_and_subj_number are determined """
         if name == None:
             name = self.subj
         self.filename = "data/%s.dat" % name
@@ -105,7 +109,7 @@ class Experiment:
     # load_all_images
     #------------------------------------------------------------
     def load_all_images(self, directory):
-        """load_all_images takes 1 value, the path to an images folder.
+        """load_all_images takes 1 value, the path to the folder containing images.
            The function filters out 'Thumbs.db' files (in the case of Mac's) and
            hidden system files. All images are placed in a list called 'self.resources'. 
            All images must be referenced by name, i.e. self.resources['image1.gif']. """
@@ -229,7 +233,7 @@ class Experiment:
     # place_text_image
     #------------------------------------------------------------
     def place_text_image(self, mysurf, prompt, size, xoff, yoff, txtcolor, bgcolor):
-        """Blits a text object to the surface passed.
+        """Blits a Text object to the surface passed.
             mysurf - Surface object to be blitted to
             prompt - String to be displayed
             size - text size
@@ -288,14 +292,14 @@ class Experiment:
     #------------------------------------------------------------
     # show_centered_image
     #------------------------------------------------------------
-    def show_centered_image(self, imagename, bgcolor):
+    def show_centered_image(self, imagename, bgcolor, alpha=None):
         """Centers an image in the screen with a given bgcolor (RGB) """
-        return self.show_image(imagename, bgcolor, 0, 0)
+        return self.show_image(imagename, bgcolor, 0, 0, alpha)
 
     #------------------------------------------------------------
     # show_image (for backward compatiblilty)
     #------------------------------------------------------------
-    def show_image(self, imagename, bgcolor, xoffset, yoffset):
+    def show_image(self, imagename, bgcolor, xoffset, yoffset, alpha=None):
         """ Creates Surface object with the dimensions of the display screen. Then 
         blits an image to the center of the Surface plus any offseting height/width. 
         The Surface is then returned. 
@@ -303,6 +307,7 @@ class Experiment:
         imagename - name of the image file loaded by load_image (or load_all_images)
         bgcolor - color of the surface
         xoffset/offset - offsets relative to the center of the Surface
+        alpha - alpha value of the image
         
         Note: This CREATES a Surface object, whereas show_image_add is passed a Surface
         to be blitted on"""
@@ -313,6 +318,8 @@ class Experiment:
 
         image = self.resources[imagename]
         image_rect = image.get_rect()
+        if alpha not None:
+            image.set_alpha(alpha)
         image_rect.centerx = background.get_rect().centerx + xoffset
         image_rect.centery = background.get_rect().centery + yoffset
         
@@ -322,26 +329,29 @@ class Experiment:
     #------------------------------------------------------------
     # show_centered_image_add
     #------------------------------------------------------------
-    def show_centered_image_add(self, mysurf, imagename, bgcolor):
+    def show_centered_image_add(self, mysurf, imagename, bgcolor, alpha=None):
         """Centers an image in the Surface passed with a given bgcolor (RGB) """
-        return self.show_image_add(mysurf, imagename, 0, 0)     
+        return self.show_image_add(mysurf, imagename, 0, 0, alpha)     
         
     #------------------------------------------------------------
     # show_image_add
     #------------------------------------------------------------
-    def show_image_add(self, mysurf, imagename, xoffset, yoffset):
+    def show_image_add(self, mysurf, imagename, xoffset, yoffset, alpha=None):
         """ Places an image onto a passed Surface with given offsets relative
         to the center of the Surface. Returns the drawn-on Surface.
         
         mysurf - Surface to be blitted to
         imagename - name of the image file loaded by load_image (or load_all_images)
         xoffset/offset - offsets relative to the center of the Surface
+        alpha - alpha value of the image
         
         Note: This REQUIRES a Surface object to be passed, whereas show_image creates a Surface
         to be blitted on  """
         
         image = self.resources[imagename]
         image_rect = image.get_rect()
+        if alpha not None:
+            image.set_alpha(alpha)
         image_rect.centerx = mysurf.get_rect().centerx + xoffset
         image_rect.centery = mysurf.get_rect().centery + yoffset
         
@@ -504,6 +514,7 @@ class Experiment:
     # Not currently working due to self.datafile being commented out
     #------------------------------------------------------------
     def on_exit(self):
+        """ Clears all data that remains on queue and closes the datafile set in set_filename """
         self.datafile.flush()
         self.datafile.close()
         exit()
