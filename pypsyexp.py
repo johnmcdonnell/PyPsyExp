@@ -83,7 +83,8 @@ class Experiment:
     # load_all_resources
     #------------------------------------------------------------
     def set_filename(self, name=None):
-        """ Sets and opens file to be written.
+        """ Sets and opens file to be written. If the name field is not passed, the datafile 
+            opened is named the current subject number.
         
         * Must be called after the values from get_cond_and_subj_number are determined """
         if name == None:
@@ -275,7 +276,7 @@ class Experiment:
     #------------------------------------------------------------
     # play_sound
     #------------------------------------------------------------
-    # Do we want it to return the "play time"?
+    # Do we want it to return the "play time"? - yes
     def play_sound(self, sndname, pause):
         """ Plays a sound file for its length plus and length 'pause' in milliseconds.
             This function works with .wav files only. This pauses the timer as well
@@ -287,7 +288,7 @@ class Experiment:
         pygame.time.wait(int(self.resources[sndname].get_length()*1000+pause))
         rt = pygame.time.get_ticks() - time_stamp
         filelen = int(self.resources[sndname].get_length()*1000)
-        #print "PLAY TIME  =", rt - filelen
+        print "PLAY TIME  =", rt - filelen
  
     #------------------------------------------------------------
     # show_centered_image
@@ -318,7 +319,7 @@ class Experiment:
 
         image = self.resources[imagename]
         image_rect = image.get_rect()
-        if alpha not None:
+        if alpha != None:
             image.set_alpha(alpha)
         image_rect.centerx = background.get_rect().centerx + xoffset
         image_rect.centery = background.get_rect().centery + yoffset
@@ -350,7 +351,7 @@ class Experiment:
         
         image = self.resources[imagename]
         image_rect = image.get_rect()
-        if alpha not None:
+        if alpha != None:
             image.set_alpha(alpha)
         image_rect.centerx = mysurf.get_rect().centerx + xoffset
         image_rect.centery = mysurf.get_rect().centery + yoffset
