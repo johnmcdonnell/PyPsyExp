@@ -82,13 +82,10 @@ class Experiment:
     #------------------------------------------------------------
     # load_all_resources
     #------------------------------------------------------------
-    def set_filename(self, name=None):
+    def set_filename(self):
         """ Sets and opens file to be written. If the name field is not passed, the datafile 
             opened is named the current subject number.
         
-        * Must be called after the values from get_cond_and_subj_number are determined """
-        if name == None:
-            name = self.subj
         self.filename = "data/%s.dat" % name
         
         self.datafile = open(self.filename, 'w')
