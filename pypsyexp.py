@@ -82,9 +82,12 @@ class Experiment:
     #------------------------------------------------------------
     # load_all_resources
     #------------------------------------------------------------
-    def set_filename(self):
+    def set_filename(self, name=None):
         """ Sets and opens file to be written. If the name field is not passed, the datafile 
-            opened is named the current subject number.
+            opened is named the current subject number. """
+        
+        if name==None:
+        	name = self.subj
         
         self.filename = "data/%s.dat" % name
         
@@ -181,8 +184,9 @@ class Experiment:
         myfile.writelines(f)
         myfile.flush()
         myfile.close()
+        self.subj = c[2]#for use in set_filename
         return c
-
+ 
     #------------------------------------------------------------
     # get_cond_and_subj_number_ftp
     #------------------------------------------------------------
