@@ -451,10 +451,8 @@ class Experiment:
         
         timestamp = pygame.time.get_ticks()
         while 1:
-            if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
-                self.on_exit()
             # make sure the program is running at 30 fps
-            clock.tick(30)
+            clock.tick(40)
             
             # events for txtbx
             events = pygame.event.get()
