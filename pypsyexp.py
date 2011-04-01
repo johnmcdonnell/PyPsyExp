@@ -422,11 +422,11 @@ class Experiment:
     #------------------------------------------------------------
     # prompt_text
     #------------------------------------------------------------
-    def prompt_text(self, background, x, y, timelimit = None, prompt = '', fontsize = 32, maxlength = 40, color=black, centered = False):
+    def prompt_text(self, background, x, y, timelimit = None, prompt = '', fontsize = 32, maxlength = 40, fgcolor=black, centered = False):
         """
         Makes an onscreen prompt for users to enter a single line of text.
         
-        Required arguments: 
+        required arguments: 
             background -- the screen as it will be refreshed.
             x, y       -- These are upper-left coordinates of the textbox, unless 'centered' is set to True. 
                           When centered is True, x is the x offset from the center; y is unchanged.
@@ -435,7 +435,7 @@ class Experiment:
             prompt    -- To be printed in front of the typed text. Default is a null string.
             fontsize  -- Size of text printed on screen. Default is 32.
             maxlength -- Maximum number of characters allowed to be typed. Default is 40. 0 means unlimited.
-            color     -- Color of text; tuple in (R, G, B). Default is black.
+            fgcolor     -- Color of text; tuple in (R, G, B). Default is black.
             centered  -- Maintain a centered alignment. x becomes offset of center if True. Default is False.
         
         Returns the typed text as it appeared on the screen.
@@ -444,40 +444,13 @@ class Experiment:
             Restrictions on possible characters.
             Control over typeface.
         """
+        font = self.font
+        font.size=fontsize
         pygame.event.clear()
-        txtbx = TextPrompt(maxlength=maxlength, color=color, x=x, y=y, prompt = '', font = pygame.font.Font(None, fontsize))
-        # create the pygame clock
-        clock = pygame.time.Clock()
-        
-        timestamp = pygame.time.get_ticks()
-        while 1:
-            # make sure the program is running at 30 fps
-            clock.tick(40)
-            
-            # events for txtbx
-            events = pygame.event.get()
-            # process other events
-            if timelimit and pygame.time.get_ticks()-timestamp > timelimit:
-                break
-            if txtbx.value and pygame.key.get_pressed()[K_RETURN]:
-                break
-            if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
-                self.on_exit()
+        txtbx = TextPrompt(self.screen, background, maxlength=maxlength, fgcolor=color, x=x, y=y, prompt = '', font = font)
 
-            # clear the screen
-            screen = background
-            self.screen.blit(screen, (0,0))
-            
-            # update txtbx
-            txtbx.update(events)
-            
-            # blit txtbx on the sceen
-            if centered:
-                txtbx.center(screen, offset = x)
-            txtbx.draw(self.screen)
-            # refresh the display
-            pygame.display.flip()
-        return txtbx.value
+        return txtbx.get_text_line(centered=centered, timelimit=timelimit)
+        
 
 
     #------------------------------------------------------------
@@ -684,14 +657,20 @@ class TextPrompt:
     """
     A text input prompt. Allows the on-screen editing of a single line of text.
     """
-    def __init__(self, **options):
+    def __init__(self, screen, background, **options):
         """
         TextPrompt accepts the following keyword arguments when it starts up: x, y, font, color, restricted, maxlength, prompt. 
         """
         
-        defaults = dict(( ['x', 0], ['y', 0], ['font', pygame.font.Font(None, 32)],
-                    ['color', (0,0,0)], ['restricted', '\'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\\\'()*+,-./:;<=>?@[\]^_`{|}~\''],
-                    ['maxlength', -1], ['prompt', ''] ))
+        defaults = dict(
+            x= 0, 
+            y= 0, 
+            font= pygame.font.Font(None, 32),
+            fgcolor= (0,0,0), 
+            restricted= '\'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\\\'()*+,-./:;<=>?@[\]^_`{|}~\'',
+            maxlength= -1, 
+            prompt= '' 
+        )
         
         self.options = {}
         for item in defaults.keys():
@@ -703,10 +682,13 @@ class TextPrompt:
             if item not in defaults.keys():
                 raise Exception, "Keyword argument %s was not expected." % `item`
         
+        self.background = background
+        self.screen = screen
         self.x = self.options['x']
         self.y = self.options['y']
         self.font = self.options['font']
         self.color = self.options['color']
+        self.fgcolor = self.options['fgcolor']
         self.restricted = self.options['restricted']
         self.maxlength = self.options['maxlength']
         self.prompt = self.options['prompt']; 
@@ -714,10 +696,11 @@ class TextPrompt:
         self.shifted = False
         
         # This could be made an option but it's probably not necessary:
-        pygame.key.set_repeat( 800, 200 )
+        pygame.key.set_repeat( 600, 150 )
+        
     
-    def center(self, background, offset = 0):
-        self.x = background.get_rect().centerx + offset - (self.font.render(self.prompt+self.value, 1, self.color).get_width()/2)
+    def center(self, offset = 0):
+        self.x = self.background.get_rect().centerx + offset - (self.font.render(self.prompt+self.value, 1, self.fgcolor).get_width()/2)
     
     def set_pos(self, x, y):
         """ Set the position to x, y """
@@ -728,55 +711,82 @@ class TextPrompt:
         """ Set the font for the input """
         self.font = font
 
-    def draw(self, surface):
-        """ Draw the text input to a surface """
-        text = self.font.render(self.prompt+self.value, 1, self.color)
-        surface.blit(text, (self.x, self.y))
+    def draw(self):
+        """ Draw the text input to the screen """
+        text = self.font.render(self.prompt+self.value, 1, self.fgcolor)
+        self.screen.blit(text, (self.x, self.y))
 
     def update(self, events):
         """
         Update the input based on a list of events passed in.
         Returns true if enter is pressed.
         """
+        # key.name doesn't know about shifting. Manual fix:
+        conversion = dict( zip( "`1234567890-=[]\;',./", '~!@#$%^&*()_+{}|:"<>?' ) )
         for event in events:
             if event.type == KEYDOWN:
                 if event.key == K_LSHIFT or event.key == K_RSHIFT:
                     self.shifted = True
-            if event.type == KEYUP:
-                if event.key == K_LSHIFT or event.key == K_RSHIFT:
-                    self.shifted = False
+                    continue
                 if event.key == K_RETURN:
-                    return 'True'
-                if event.key == K_BACKSPACE: self.value = self.value[:-1]
-                elif event.key == K_LSHIFT or event.key == K_RSHIFT:
-                    self.shifted = False
-                elif event.key == K_SPACE:
+                    return True
+                if event.key == K_BACKSPACE: 
+                    self.value = self.value[:-1]
+                    continue
+                if event.key == K_SPACE:
                     self.value += ' '
+                    continue
+                #modsraw = event.key.get_mods()
                 keydown = pygame.key.name( event.key )
                 if self.shifted:
-                    keydown = keydown.upper()
-                    # This makes shifted symbols impossible. Manual fix:
-                    conversion = dict( zip( "`1234567890-=[]\;',./", '~!@#$%^&*()_+{}|:"<>?' ) )
                     if keydown in conversion.keys():
                         keydown = conversion[ keydown ]
+                    else:
+                        keydown = keydown.upper()
                 if keydown in self.restricted:
                     self.value += keydown
-        if self.maxlength >= 0: 
+            elif event.type == KEYUP:
+                if event.key == K_LSHIFT or event.key == K_RSHIFT:
+                    self.shifted = False
+        if self.maxlength >= 0:
             self.value = self.value[:self.maxlength]
         return False
     
-    def gettextresp( self, background ):
-        pygame.event.clear()
-        done = False
-        while not done:
+    def get_text_line(self, centered=False, timelimit=None):
+        """
+        Prompts the user for a line of text, updating it as they type.
+        """
+        # create the pygame clock
+        clock = pygame.time.Clock()
+        timestamp = pygame.time.get_ticks()
+        while 1:
+            # have the program is running at 40 fps
+            clock.tick(40)
+            
+            # events for self
+            events = pygame.event.get()
+            # process other events
+            if timelimit and pygame.time.get_ticks()-timestamp > timelimit:
+                break
+            if self.value and pygame.key.get_pressed()[K_RETURN]:
+                break
             if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
                 self.on_exit()
-            event = pygame.event.poll()
-            if event.type == KEYDOWN:
-                done = self.update([event])
-                self.draw( background )
-                self.update_display
 
+            # clear the screen
+            self.screen.blit(self.background, (0,0))
+            
+            # update self
+            self.update(events)
+            
+            # blit self on the sceen
+            if centered:
+                self.center(offset = x)
+            self.draw()
+            # refresh the display
+            pygame.display.flip()
+        return self.value
+    
 def main():
     pass
 
