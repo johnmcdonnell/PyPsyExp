@@ -681,9 +681,13 @@ class Audio:
             previous = l_channel[i][0]		    
     
 class TextPrompt:
-    """A text input prompt."""
+    """
+    A text input prompt. Allows the on-screen editing of a single line of text.
+    """
     def __init__(self, **options):
-        """ Options: x, y, font, color, restricted, maxlength, prompt. """
+        """
+        TextPrompt accepts the following keyword arguments when it starts up: x, y, font, color, restricted, maxlength, prompt. 
+        """
         
         defaults = dict(( ['x', 0], ['y', 0], ['font', pygame.font.Font(None, 32)],
                     ['color', (0,0,0)], ['restricted', '\'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\\\'()*+,-./:;<=>?@[\]^_`{|}~\''],
@@ -697,7 +701,7 @@ class TextPrompt:
                 self.options[item] = defaults[item]
         for item in options.keys():
             if item not in defaults.keys():
-                raise Exception, "Keyword argument %s was not expected.", `item`
+                raise Exception, "Keyword argument %s was not expected." % `item`
         
         self.x = self.options['x']
         self.y = self.options['y']
@@ -708,6 +712,9 @@ class TextPrompt:
         self.prompt = self.options['prompt']; 
         self.value = ''
         self.shifted = False
+        
+        # This could be made an option but it's probably not necessary:
+        pygame.key.set_repeat( 800, 200 )
     
     def center(self, background, offset = 0):
         self.x = background.get_rect().centerx + offset - (self.font.render(self.prompt+self.value, 1, self.color).get_width()/2)
@@ -727,14 +734,24 @@ class TextPrompt:
         surface.blit(text, (self.x, self.y))
 
     def update(self, events):
-        """ Update the input based on passed events """
+        """
+        Update the input based on a list of events passed in.
+        Returns true if enter is pressed.
+        """
         for event in events:
-            if event.type == KEYUP:
-                if event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = False
             if event.type == KEYDOWN:
+                if event.key == K_LSHIFT or event.key == K_RSHIFT:
+                    self.shifted = True
+            if event.type == KEYUP:
+                if event.key == K_LSHIFT or event.key == K_RSHIFT:
+                    self.shifted = False
+                if event.key == K_RETURN:
+                    return 'True'
                 if event.key == K_BACKSPACE: self.value = self.value[:-1]
-                elif event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = True
-                elif event.key == K_SPACE: self.value += ' '
+                elif event.key == K_LSHIFT or event.key == K_RSHIFT:
+                    self.shifted = False
+                elif event.key == K_SPACE:
+                    self.value += ' '
                 keydown = pygame.key.name( event.key )
                 if self.shifted:
                     keydown = keydown.upper()
@@ -744,7 +761,21 @@ class TextPrompt:
                         keydown = conversion[ keydown ]
                 if keydown in self.restricted:
                     self.value += keydown
-        if self.maxlength >= 0: self.value = self.value[:self.maxlength]
+        if self.maxlength >= 0: 
+            self.value = self.value[:self.maxlength]
+        return False
+    
+    def gettextresp( self, background ):
+        pygame.event.clear()
+        done = False
+        while not done:
+            if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
+                self.on_exit()
+            event = pygame.event.poll()
+            if event.type == KEYDOWN:
+                done = self.update([event])
+                self.draw( background )
+                self.update_display
 
 def main():
     pass
