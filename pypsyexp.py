@@ -258,8 +258,7 @@ class Experiment:
         full_path_files = [ os.path.join( os.curdir, directory, fn) 
                            for fn in files ]
         images = [ self.load_image( fn ) for fn in full_path_files ]
-        for fn in full_path_files:
-            self.resources[ fn ] = self.load_image( fn )
+        self.resources.update( zip( files, images ) )
     
     #------------------------------------------------------------
     # load_all_sounds
@@ -285,7 +284,7 @@ class Experiment:
         full_path_files = [ os.path.join( os.curdir, directory, fn) 
                            for fn in files ]
         sounds = [ pygame.mixer.Sound( fn ) for fn in full_path_files ]
-        self.resources.update( files, sounds )
+        self.resources.update( zip( files, sounds ) )
     
     #------------------------------------------------------------
     # load_image
@@ -317,9 +316,9 @@ class Experiment:
             ``pygame.error``
         """
         try:
-            image = pygame.image.load(fullname)
+            image = pygame.image.load(filename)
         except pygame.error, message:
-            warn( "Can't load image: %s" % fullname )
+            warn( "Can't load image: %s" % filename )
             raise SystemExit, message
         image = image.convert()
         # Deciding which pixel should be transparent:
@@ -328,14 +327,14 @@ class Experiment:
                 colorkey = image.get_at((0, 0))
             image.set_colorkey(colorkey, RLEACCEL)
         else:
-            partfn = fullname.split( '.' )[ -2]
+            partfn = filename.split( '.' )[ -2]
             transpkeys = partfn.split( '-' )[-3:]
             if transpkeys[0] == "transp":
                 try:
                     colorkey = image.get_at( map( int, transpkeys[1:] ) )
                     image.set_colorkey(colorkey, RLEACCEL)
                 except Exception, message:
-                    warn( "WARNING: Unable to set color key for file %s." % fullname )
+                    warn( "WARNING: Unable to set color key for file %s." % filename )
                     warn( message )
         return image
     
@@ -376,7 +375,7 @@ class Experiment:
         lines = myfile.readlines()
         myfile.close()
         
-        outlines = read_patterncode_lines( lines )
+        outlines = self.read_patterncode_lines( lines )
         myfile = open(filename,'w')
         myfile.seek(0)
         myfile.writelines( outlines )
@@ -716,7 +715,7 @@ class Experiment:
             bgcolor = self.bgcolor
         else:
             bgcolor = pgColor( bgcolor )
-        return self.show_image(imagename, bgcolor=bgcolor, xoffset=0, yoffset=0, alpha=alpha)
+        return self.show_image(imagename, bgcolor=bgcolor, xoff=0, yoff=0, alpha=alpha)
     
     #------------------------------------------------------------
     # show_image (for backward compatiblilty)
@@ -742,6 +741,9 @@ class Experiment:
         
         Returns:
             A surface with the image blitted over a field of ``bgcolor``.
+        
+        Raises:
+          * KeyError: Image not found.
         """
         if not bgcolor:
             bgcolor = self.bgcolor
@@ -752,7 +754,11 @@ class Experiment:
         outsurf = outsurf.convert()
         outsurf.fill(bgcolor)
         
-        image = self.resources[imagename]
+        try:
+            image = self.resources[imagename]
+        except KeyError, msg:
+            warn( "Could not find image: %s." % imagename)
+            self.on_exit( msg )
         image_rect = image.get_rect()
         if alpha != None:
             image.set_alpha(alpha)
