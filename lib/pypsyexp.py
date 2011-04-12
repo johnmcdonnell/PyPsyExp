@@ -133,6 +133,10 @@ class Experiment:
         # See warnings documentation for more information.
         warn.simplefilter("default")
         
+        # Boilerplate:
+        self.resources = {}
+        self.trial = 0
+        
         ### Reading in options/ setting defaults/ initalizing files.
         defaults = dict(
             font = None,
@@ -153,10 +157,19 @@ class Experiment:
             suppresspygame = False
         )
         
+        # Regular args:
+        self.nofullscreen = nofullscreen
+        self.experimentname = experimentname
+        self.screenres = screenres
+        
+        # Keyword arguments:
+
+        # Updating options dictionary
         self.options = defaults
         self.options.update( useroptions )
         
-        self.resources = {}
+        # Assigning various
+        
         self.bgcolor = pgColor( self.options["bgcolor"] )
         self.fgcolor = pgColor( self.options["fgcolor"] )
         self.fontname = self.options["fontname"]
@@ -172,7 +185,7 @@ class Experiment:
         self.verbose = self.options["verbose"]
         self.framerate = self.options["framerate"]
         self.suppresspygame = self.options["suppresspygame"]
-        self.nofullscreen = nofullscreen
+        
         
         if self.options["patterncode"]:
             self.get_cond_and_subj_number( useroptions["patterncode"] )
@@ -203,7 +216,7 @@ class Experiment:
                     pglc.HWSURFACE|pglc.DOUBLEBUF|pglc.FULLSCREEN) 
             pygame.display.set_caption(experimentname)
             self.font = pygame.font.SysFont( self.fontname, self.fontsize )
-            self.background = self.clear_screen()
+            self.clear_screen(rewrite_background=True)
             self.clock = pygame.time.Clock()
             
             # Loading imagedir (if it's been set)
@@ -249,8 +262,6 @@ class Experiment:
             except IOError:
                 warn.warn( "Error loading sounds." )
                 self.on_exit()
-        
-        self.trial = 0
     
     #------------------------------------------------------------
     # set_filename
@@ -663,6 +674,8 @@ class Experiment:
         """
         # Legacy arg order:
         # mysurf, prompt, size, xoff, yoff, txtcolor, bgcolor
+        if not prompt:
+            raise Exception, "Prompt required."
         if not mysurf:
             mysurf = self.background
         if not fontname:
@@ -678,7 +691,7 @@ class Experiment:
             bgcolor = self.bgcolor
         else:
             bgcolor = pgColor( bgcolor )
-        text = self.get_text_image(font=thisfont, message=prompt, fgcolor=txtcolor, bgcolor=bgcolor)
+        text = self.get_text_image(font=thisfont, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
         textpos = self.placing_rect(mysurf, text, xoff, yoff)
         mysurf.blit(text, textpos)
         return mysurf
@@ -686,14 +699,14 @@ class Experiment:
     #------------------------------------------------------------
     # get_text_image
     #------------------------------------------------------------
-    def get_text_image(self, font=None, message="", fgcolor=None, bgcolor=None):
+    def get_text_image(self, font=None, prompt="", txtcolor=None, bgcolor=None):
         """ 
         Creates a Surface with anti-aliased text written on it, and returns it.
         
         Kwargs:
          * ``font`` (``pygame.font``): The font to use for the text.
-         * ``message`` (str): String to be displayed
-         * ``fontcolor`` (str or tuple): Color for text (RGB or name)
+         * ``prompt`` (str): String to be displayed
+         * ``txtcolor`` (str or tuple): Color for text (RGB or name)
          * ``bgcolor`` (str or tuple): Color for the background (RGB or name)
         
         Returns:
@@ -701,15 +714,15 @@ class Experiment:
         """
         if not font:
             font = self.font
-        if not fgcolor:
-            fgcolor = self.fgcolor
+        if not txtcolor:
+            txtcolor = self.txtcolor
         else:
-            fgcolor = pgColor( fgcolor )
+            txtcolor = pgColor( txtcolor )
         if not bgcolor:
             bgcolor = self.bgcolor
         else:
             bgcolor = pgColor( bgcolor )
-        base = font.render(message, 1, fgcolor, bgcolor)
+        base = font.render(prompt, 1, txtcolor, bgcolor)
         size = base.get_width(), base.get_height()
         img = pygame.Surface(size, 16)
         img = img.convert()
@@ -798,7 +811,7 @@ class Experiment:
     #------------------------------------------------------------
     # show_image (for backward compatiblilty)
     #------------------------------------------------------------
-    def show_image(self, imagename, bgcolor=None, xoff=0, yoff=0, alpha=None):
+    def show_image(self, imagename, bgcolor=None, xoff=0, yoff=0, alpha=None, rewrite_background=True):
         """ 
         Creates a surface object with the dimensions of the display screen.
         Then blits an image to the center of the surface plus any offseting
@@ -816,6 +829,8 @@ class Experiment:
          * ``xoff`` (int): Horizontal offset from center.
          * ``yoff`` (int): Vertical offset from center.
          * ``alpha`` (float): Amount of opacity. Defaults to fully opaque.
+         * ``rewrite_background`` (bool): Whether the surface is written to
+           ``self.background``. Defaults to ``True``.
         
         Returns:
             A surface with the image blitted over a field of ``bgcolor``.
@@ -844,6 +859,7 @@ class Experiment:
         image_rect.centery = outsurf.get_rect().centery + yoff
         
         outsurf.blit(image,image_rect)
+        self.background = outsurf
         return outsurf
     
     #------------------------------------------------------------
@@ -910,7 +926,7 @@ class Experiment:
     # This may be more accurate if you pass the actual screen that
     # need to be cleared and flip it after filling it with a given color
     #------------------------------------------------------------
-    def clear_screen(self, color=None):
+    def clear_screen(self, color=None, rewrite_background=True):
         """ 
         Creates a Surface with the dimensions of the display screen, fills
         it with a given color, and returns the Surface.  
@@ -918,6 +934,8 @@ class Experiment:
         Kwargs:
          * ``color`` (str of tuple): Color to draw on screen (name or rgb).
            Defaults to ``self.bgcolor``.
+         * ``rewrite_background`` (bool): Whether the surface is written to
+           ``self.background``. Defaults to ``True``.
         """
         if not color:
             color = self.bgcolor
@@ -927,6 +945,8 @@ class Experiment:
         background = pygame.Surface(size)
         background = background.convert()
         background.fill(color)
+        if rewrite_background:
+            self.background = background
         return background    
     
     #------------------------------------------------------------
@@ -945,7 +965,7 @@ class Experiment:
         Returns:
             A list with reaction time and the value code for the response made.
         """
-        return self.get_response_and_rt( val=val, keys=['p','q'] )
+        return self.get_response( val=val, keys=['p','q'] )
     
     def get_response_and_rt(self, keys=['p','q'], val=None):
         """ 
@@ -964,23 +984,28 @@ class Experiment:
            'Right']`` or ``(0, 1)``. Defaults to be the same as ``keys``.
         
         Returns:
-            A list with reaction time and the value code for the response made.
+            ( reactiontime, resultvalue )
         """
         if not val:
             val = keys
         time_stamp = pygame.time.get_ticks()
         while 1:
             self.tick()
-            res = self.get_response()
+            res = self.get_keystroke()
             for i, r in enumerate( val ):
                 if res == r:
-                    return val[i]
+                    return (pygame.time.get_ticks()-time_stamp), val[i]
     
-    
-    #------------------------------------------------------------
-    # get_response ... decapitalizes capitals.
-    #------------------------------------------------------------
     def get_response(self):
+        """
+        Legacy function name. Deprecated.
+        """
+        return self.get_keystroke( )
+    
+    #------------------------------------------------------------
+    # get_keystroke ... decapitalizes capitals.
+    #------------------------------------------------------------
+    def get_keystroke(self):
         """
         Waits for a key to be pressed, then Returns the key mapping for a
         single pressed letter, ignoring modifier keys. Actual key mappings are
