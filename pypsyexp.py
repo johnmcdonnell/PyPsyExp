@@ -28,13 +28,11 @@ from array import *
 from wave import open as W
 import struct
 
-#------------------------------------------------------------
-# Useful RGB values
-#------------------------------------------------------------
-white = (255, 255, 255)
-blue = (0, 0, 255)
-black = (0, 0, 0)
-red = (255, 0, 0)
+# Colors
+white = pygame.color.THECOLORS['white']
+blue = pygame.color.THECOLORS['blue']
+black = pygame.color.THECOLORS['black']
+red = pygame.color.THECOLORS['red']
 
 #------------------------------------------------------------
 # MouseButton Class
@@ -61,7 +59,6 @@ class Experiment:
     
     #------------------------------------------------------------
     # __init__
-    #
     #------------------------------------------------------------    
     def __init__(self, laptop, screenres, experimentname):
         """  Init takes three values:
@@ -385,39 +382,56 @@ class Experiment:
             function (reaction time; rt) and the response made (res).
             val - list or tuple with coded values, e.g. ['Left', 'Right'] or 
             (0, 1) """
-        
+        return self.get_response_and_rt( val=val, keys=['p','q'] )
+    
+    def get_response_and_rt(self, val=None, keys=['p','q']):
+        """ 
+        Monitors keyboard Events for the given set of keys (default 'Q' and
+        'P'). Case insensitive. Returns the time it took from the call to the
+        function to the end of the function (reaction time; rt) and the coded
+        version of the response (given in 'val'). 
+            val  - list or tuple with coded values, e.g. ['Left', 'Right']
+                    or (0, 1, 2, 3). Defaults to be the keys themselves.
+            keys - iterable of strings representing the physical keys the
+                    subject will press, e.g. ['1','2','3'] or ["space","left shift".
+                    Keypad numbers == keyboard numbers (although this could change)
+                    For a full list of valid key names, see the libSDL source, under
+                    /src/SDL_keyboard.c
+        """
+        if not val:
+            val = keys
         time_stamp = pygame.time.get_ticks()
         while 1:
             res = self.get_response()
-            if (res == 'Q' or res=='q'):
-                res = val[0]
-                break
-            elif (res == 'P' or res=='p'):
-                res = val[1]
-                break
-        
-        rt = pygame.time.get_ticks() - time_stamp
-        
-        return [res, rt]
+            for index, key in enumerate( keys ):
+                print res
+                print key
+                if res == key or res == key.upper():
+                    rt = pygame.time.get_ticks() - time_stamp
+                    res = val[index]
+                    return res, rt
 
-    #------------------------------------------------------------
-    # get_response
-    #------------------------------------------------------------
-    def get_response(self):
-        """ Monitors keyboard Events. Converts lowercase input into uppercase
-            based on ASCII codes. Pressing the left Shift and Tilde key (~/`) at the same time 
-            will exit the program. Returns the key pressed. """
-        pygame.event.clear()
+    def check_for_exit(self):
         if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
             self.on_exit()
+    
+    #------------------------------------------------------------
+    # get_response ... decapitalizes capitals.
+    #------------------------------------------------------------
+    def get_response(self):
+        """
+        Returns a single pressed letter, ignoring modifier keys.
+        Actual key mappings are found in libSDL source, in:
+        /src/SDL_keyboard.c
+        """
+        pygame.event.clear()
         while 1:
+            self.check_for_exit()
             event = pygame.event.poll()
             if event.type == KEYDOWN:
                 resp = pygame.key.name(event.key)
-                if (resp > 96 and resp < 123):
-                    resp -= 40
-                if (resp == '[1]' or resp=='[2]' or resp=='[3]' or resp=='[4]' or resp=='[5]' or resp == '[6]' or resp=='[7]' or resp=='[8]' or resp=='[9]' or resp=='[0]'):
-                    resp = resp[1]
+                if resp[0] == "[" and resp[-1]=="]": # this is how keypad keys are coded.
+                    resp = resp[1:-1]
                 return resp 
     #------------------------------------------------------------
     # prompt_text
@@ -456,7 +470,7 @@ class Experiment:
     #------------------------------------------------------------
     # escapable_sleep
     #------------------------------------------------------------
-    def escapable_sleep(self, pause):
+    def escapable_sleep(self, pause, esckey=None):
         """ Pauses the program for 'pause'-number of milliseconds. Can be exited at any time
             by pressing the left Shift and Tilde key (~/`) at the same time  """
         
@@ -464,22 +478,80 @@ class Experiment:
         time_stamp = pygame.time.get_ticks()
         while waittime < pause:
             pygame.event.clear()
-            if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
-                self.on_exit()
             waittime = pygame.time.get_ticks() - time_stamp
-
+            self.check_for_exit()
+            if esckey != None:
+                if pygame.key.get_pressed()[esckey]:
+                    break
+    
+    
     #------------------------------------------------------------
     # output_trial
-    # not currently in use
     #------------------------------------------------------------
-    def output_trial(self, myline):  
-        """ Writes a line a of data to a file, which each value seperated by a space. """   
-        for i in myline:
-            self.datafile.write(str(i)+' ')
-
+    def output_trial(self, myline):     
+        print myline
+        myline = ' '.join( map(str, myline) ) # Python trick for interspersing spaces.
+        self.datafile.write(myline)
+        
         self.datafile.write('\n')
         self.datafile.flush()
-        
+    
+    def draw_square(self, surf=None, color=None, x=0, y=0, width=10, height=10, thick=0):
+        """ 
+        Draws a square of the size and coordinates requested to the background,
+        and returns the result.
+        """
+        if not surf:
+            surf = self.background
+        pygame.draw.rect(surf, color, (x,y,width,height), thick)
+        return surf
+    
+    def draw_on_screen_example( self, background=None, color=None, break_key=K_SPACE, radius=3 ):
+        """
+        This is an example of how to allow participants to draw on the screen
+        with a mouse. They can draw by clicking and dragging the mouse.
+        Pressing the break_key exits the drawing environment.
+        """
+        if not background:
+            background = self.background
+        if not color:
+            color = self.fgcolor
+        has_drawn = False
+        done = False
+        last_pos = None
+        timestamp = pygame.time.get_ticks()
+        is_pressed = pygame.mouse.get_pressed()[0]
+        defaultcursor = pygame.mouse.get_cursor()
+        oldbackground = background.copy()
+        pygame.mouse.set_cursor((8, 8), (4, 4), (24, 24, 24, 231, 231, 24, 24, 24), (0, 0, 0, 0, 0, 0, 0, 0))
+        while not done:
+            self.check_for_exit()
+            for event in pygame.event.get():
+                if not pygame.mouse.get_pressed()[0]:
+                    is_pressed = False
+                if has_drawn and event.type == KEYUP and event.key==break_key :
+                    done = True
+                    rt = pygame.time.get_ticks() - timestamp
+                    break
+                elif pygame.mouse.get_pressed()[0]:
+                    pos = pygame.mouse.get_pos()
+                    if is_pressed and last_pos:
+                        pygame.draw.line( background, color, last_pos, pos, radius )
+                    else:
+                        pygame.draw.circle( background, color, pos, radius )
+                    self.update_display( background )
+                    has_drawn = True
+                    last_pos = pos
+                    is_pressed = True
+                    
+                #elif (event.type == MOUSEMOTION and event.buttons[0]) or (event.type == MOUSEBUTTONDOWN):
+                #    pygame.draw.circle( background, color, event.pos, radius )
+                #    self.update_display(background)
+                #    has_drawn = True
+        pygame.mouse.set_cursor( *defaultcursor )
+        self.update_display( oldbackground )
+        return 0, rt
+    
     #------------------------------------------------------------
     # setup_gabor
     #------------------------------------------------------------
@@ -496,24 +568,25 @@ class Experiment:
         self.centery = self.gabor_h/2        
         normalization=self.bivariate_normpdf(self.centerx,self.centery,self.windowsd,self.windowsd,self.centerx,self.centery,1.0)
         self.gabor_window = np.array([[ [self.bivariate_normpdf(i,j,self.windowsd,self.windowsd,self.centerx,self.centery,1.0)/normalization]*3 for j in range(self.gabor_w)] for i in range(self.gabor_h)],na.Float64)
-
+    
     #------------------------------------------------------------
     # draw_gabor
     #------------------------------------------------------------
     def draw_gabor(self, freq, angle, scale):
-        """ Draws the gabor patch set by 'setup_gabor' 
-            freq - the frequency of the gabor patch
-            angle - value to determine rotation on the patch
-            scale - enlarges the gabor patch by a given factor
-            
-            * For faster blitting it is recommended to set the grid_w and grid_h 
-            in 'setup_gabor' to be smaller than the actual patch desired. To offset 
-            this, use the scale value to blow up the image. 
-            ** Due to the nature of rotating a Surface, the size of the Surface the gabor patch
-            changes based on the value of the rotation angle. This function re-centers the patch
-            after each rotation, but it should be noted as it will make the area of the Surface
-            larger. """
-
+        """ 
+        Draws the gabor patch set by 'setup_gabor' 
+        freq - the frequency of the gabor patch
+        angle - value to determine rotation on the patch.
+        scale - enlarges the gabor patch by a given factor
+        
+        * For faster blitting it is recommended to set the grid_w and grid_h 
+        in 'setup_gabor' to be smaller than the actual patch desired. To offset
+        this, use the scale value to blow up the image. 
+        ** Due to the nature of rotating a Surface, the size of the Surface the
+        gabor patch changes based on the value of the rotation angle. This
+        function re-centers the patch after each rotation, but it should be
+        noted as it will make the area of the Surface larger. 
+        """
         
         gabor_surface = pygame.Surface([self.gabor_w,self.gabor_h], SRCALPHA)
         gabor_surface.fill(white)
@@ -527,14 +600,17 @@ class Experiment:
         pixarray[:] = finalimg[:]
         # rotate
         gabor_surface.unlock()
-        gabor_surface = pygame.transform.rotozoom(gabor_surface, angle, scale)
+        # WARNING: due to what appears to be an upstream bug, "angle" needs to
+        # be doubled before it is passed into rotozoom. Sanity check the output
+        # of your gabors before using them.
+        gabor_surface = pygame.transform.rotozoom(gabor_surface, angle*2, scale)
         # adjusts for the increase in size do to rotation
         gabor_rect = gabor_surface.get_rect()
         surf = pygame.Surface([gabor_rect.w, gabor_rect.h])
         surf_rect = surf.get_rect()
         surf.blit(gabor_surface, surf_rect) # returns a larger surface
         return surf
-        
+    
     #------------------------------------------------------------
     # bivariate_normpdf
     #------------------------------------------------------------   
