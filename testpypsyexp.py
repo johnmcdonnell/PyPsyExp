@@ -1,38 +1,40 @@
 
 import pygame
+import pygame.locals as pglc
 import pypsyexp as ppe
 import unittest
 
 COLS = pygame.colordict.THECOLORS
 
 
-class testExp(ppe.Experiment):
-    def __init__(self, res, name, **options):
-        ppe.Experiment.__init__(self, (500, 500), "Test", **options )
-        self.set_filename( "/dev/null" )
-
-    def testTextbox(self):
-        self.datafile = open( '/dev/null', 'w' )
-        background = self.clear_screen( COLS['white'] )
-        pygame.draw.rect( background, COLS['red'], (50, 100, 30, 30) )
-        return self.prompt_text( background, 100, 100, maxlength= 30 )
-
-class testExpUnit( unittest.TestCase ):
+class testExp( unittest.TestCase ):
     def setUp( self ):
-        self.exp = testExp()
+        options = dict( fontname="Times New Roman" )
+        self.exp = ppe.Experiment(True, (500, 500), "Test", **options )
+        self.exp.set_filename( "/dev/null" )
     
     def test_getresp(self): 
-        self.exp.prompt_text( prompt="Press p or q." )
+        self.exp.place_text_image( prompt="Press p or q." )
+        self.exp.update_display()
+        print "On screen should be a request for a response (p or q)."
         print self.exp.get_response_and_rt_pq()
+    
+    def test_esc_sleep(self): 
+        self.exp.place_text_image( prompt="Sleeping for 10 seconds." )
+        self.exp.place_text_image( prompt="Press n to escape.", yoff=80 )
+        self.exp.update_display()
+        print "On screen should say we're sleeping."
+        self.exp.escapable_sleep(pause = 10 * 1000, esckey=pglc.K_n)
+    
+    def test_textbox(self):
+        #self.datafile = open( '/dev/null', 'w' )
+        print "Should have put up a text box."
+        background = self.exp.clear_screen( COLS['white'] )
+        pygame.draw.rect( background, COLS['red'], (50, 100, 30, 30) )
+        print "Textbox response:"
+        print self.exp.prompt_text( background, 100, 100, maxlength= 30 )
 
-
-
-def main():
-    options = dict( nofullscreen=True, fontname="Times New Roman" )
-    e = testExp((500, 500), "Test", **options )
-    resp = e.testTextbox()
-    print resp
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
 

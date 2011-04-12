@@ -10,25 +10,25 @@ Copyright (c) 2007 __Todd Gureckis__. All rights reserved.
 #------------------------------------------------------------
 # import modules
 #------------------------------------------------------------
-import os, sys, signal
-import math
-#from string import *
-import numpy as np
-from random import random, randint, shuffle
-#from RandomArray import *
+import os
+#import sys
+
+#import signal
 from ftplib import FTP
+import numpy as np
+import numpy.numarray as na
 import pygame
 import pygame.locals as pglc
 #from pygame.locals import *
-import tempfile
-from time import sleep
-import numpy as np
-import numpy.numarray as na
-from scipy import ndimage
-#from array import *
-from wave import open as W
+from random import random, randint, shuffle
+#from RandomArray import *
+#from scipy import ndimage
+#from string import *
 import struct
-from warnings import warn
+import tempfile
+#from time import sleep
+import warnings as warn
+from wave import open as W
 
 # Colors
 white = pygame.color.THECOLORS['white']
@@ -58,17 +58,17 @@ def pgColor( colorid ):
             return pygame.color.THECOLORS[colorid]
         except KeyError, message:
             warn( "Could not find color %s" % colorid )
-            raise SystemExit, message
+            self.on_exit( message )
     # must be an RGB code...
     elif hasattr( colorid, '__contains__' ):
         if len( colorid ) == 3 or len( colorid ) == 4:
             return colorid
         else:
             msg =  "Invalid rgb key: %s" % colorid
-            raise SystemExit, msg
+            self.on_exit( msg )
     else:
         msg = "Invalid color value : %s" % colorid
-        raise SysetmExit, msg
+        self.on_exit( msg )
 
 
 
@@ -80,7 +80,7 @@ class Experiment:
     #------------------------------------------------------------
     # __init__
     #------------------------------------------------------------    
-    def __init__(self, screenres, experimentname, **useroptions):
+    def __init__(self, nofullscreen, screenres, experimentname, **useroptions):
         """  
         Args:
          * nofullscreen (bool):
@@ -113,6 +113,10 @@ class Experiment:
          * ``framerate`` (int): Polling rate in fps.
          * ``suppresspygame`` (bool): Try not to use any pygame UI functions.
         """
+        # Initializes warning behavior.
+        # Can be used to increase or decrease warning verbosity.
+        # See warnings documentation for more information.
+        warn.simplefilter("default")
         
         ### Reading in options/ setting defaults/ initalizing files.
         defaults = dict(
@@ -130,7 +134,6 @@ class Experiment:
             ftpuser = "",
             ftppassword = "",
             verbose = True,
-            nofullscreen = False,
             framerate = 40,
             suppresspygame = False
         )
@@ -152,9 +155,9 @@ class Experiment:
         self.ftpuser = self.options["ftpuser"]
         self.ftppassword = self.options["ftppassword"]
         self.verbose = self.options["verbose"]
-        self.nofullscreen = self.options["nofullscreen"]
         self.framerate = self.options["framerate"]
         self.suppresspygame = self.options["suppresspygame"]
+        self.nofullscreen = nofullscreen
         
         if self.options["patterncode"]:
             self.get_cond_and_subj_number( useroptions["patterncode"] )
@@ -167,7 +170,7 @@ class Experiment:
             Calls to patterncode will default to assume that 'patterncode.txt'
             is the filename.
             """
-            warn( warning )
+            warn.warn( warning )
         if "imagesdir" in useroptions.keys() and useroptions["imagesdir"]:
             self.load_all_images( directory = useroptions["imagesdir"] )
         if "soundsdir" in useroptions.keys() and useroptions["imagesdir"]:
@@ -318,8 +321,8 @@ class Experiment:
         try:
             image = pygame.image.load(filename)
         except pygame.error, message:
-            warn( "Can't load image: %s" % filename )
-            raise SystemExit, message
+            warn.warn( "Can't load image: %s" % filename )
+            self.on_exit( message )
         image = image.convert()
         # Deciding which pixel should be transparent:
         if colorkey is not None:
@@ -334,8 +337,8 @@ class Experiment:
                     colorkey = image.get_at( map( int, transpkeys[1:] ) )
                     image.set_colorkey(colorkey, RLEACCEL)
                 except Exception, message:
-                    warn( "WARNING: Unable to set color key for file %s." % filename )
-                    warn( message )
+                    warn.warn( "WARNING: Unable to set color key for file %s." % filename )
+                    warn.warn( message )
         return image
     
     #------------------------------------------------------------
@@ -369,9 +372,8 @@ class Experiment:
             get_cond_and_subj_number could not find the patterncode 
             file (which was expected at %s )
             """ % filename
-            warn( msg )
-            warn( mymsg )
-            raise SystemExit
+            warn.warn( mymsg )
+            self.on_exit( msg )
         lines = myfile.readlines()
         myfile.close()
         
@@ -428,8 +430,8 @@ class Experiment:
                 username: %s
                 password: %s
             """ % ( host, username, passmessage )
-            warn( errormsg )
-            raise SystemExit, message
+            warn.warn( errormsg )
+            self.on_exit( message)
         lines = []
         ftp.retrlines('RETR ' + filename, lines.append) # get lines
         
@@ -530,7 +532,7 @@ class Experiment:
             errormsg = """
             ERROR: connectivity error while uploading to FTP.
             """
-            warn( errormsg )
+            warn.warn( errormsg )
             self.on_exit(msg=msg)
         myfile.close() # close
     
@@ -757,7 +759,7 @@ class Experiment:
         try:
             image = self.resources[imagename]
         except KeyError, msg:
-            warn( "Could not find image: %s." % imagename)
+            warn.warn( "Could not find image: %s." % imagename)
             self.on_exit( msg )
         image_rect = image.get_rect()
         if alpha != None:
@@ -928,7 +930,7 @@ class Experiment:
         Overload this function to use a different exit keystroke.
         """
         if pygame.key.get_pressed()[pglc.K_LSHIFT] and pygame.key.get_pressed()[pglc.K_BACKQUOTE]:
-            self.on_exit()
+            self.on_exit( msg="Escape sequence pressed", exception=KeyboardInterrupt)
     
     #------------------------------------------------------------
     # prompt_text
@@ -977,7 +979,11 @@ class Experiment:
         txtbx = TextPrompt(self.screen, background, maxlength=maxlength,
                            fgcolor=fgcolor, x=x, y=y, prompt = '', font = font)
         
-        return txtbx.get_text_line(centered=centered, timelimit=timelimit)
+        try:
+            line = txtbx.get_text_line(centered=centered, timelimit=timelimit)
+            return line
+        except KeyboardInterrupt, msg:
+            self.on_exit(msg=msg, exception=KeyboardInterrupt)
     
     #------------------------------------------------------------
     # escapable_sleep
@@ -1134,7 +1140,7 @@ class Experiment:
     #------------------------------------------------------------
     # on_exit
     #------------------------------------------------------------
-    def on_exit(self, msg=""):
+    def on_exit(self, msg="", exception=SystemExit):
         """ 
         Clears all data that remains on queue and closes ``self.datafile``.
         
@@ -1143,8 +1149,7 @@ class Experiment:
         """
         self.datafile.flush()
         self.datafile.close()
-        exit()
-        raise SystemExit, msg
+        raise exception, msg
 
 class Audio:
     def __init__(self, audio_path, data_path, abs_val, rel_val, sample_window):
@@ -1464,7 +1469,7 @@ class TextPrompt:
             if self._value and pygame.key.get_pressed()[pglc.K_RETURN]:
                 break
             if pygame.key.get_pressed()[pglc.K_LSHIFT] and pygame.key.get_pressed()[pglc.K_RSHIFT] and pygame.key.get_pressed()[pglc.K_BACKQUOTE]:
-                raise SystemExit, "Quit sequence pressed."
+                raise KeyboardInterrupt, "Quit sequence pressed."
             
             # clear the screen
             self.screen.blit(self.background, (0,0))
