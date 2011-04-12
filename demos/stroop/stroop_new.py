@@ -15,59 +15,31 @@ from random import random, randint
 import pygame
 from pygame.locals import *
 import tempfile
-from time import sleep
 from lib.pypsyexp import *
 
 ###########################################################
 # defines 
 ###########################################################
 experimentname = 'stroop experiment'
-experimentversion = '1.0'
-laptop = True
-white = (255, 255, 255)
-grey = (175,175,175)
-black = (0, 0, 0)
+experimentversion = '2.0'
+nofullscreen = True
 
 LAPTOPRES = (800, 800)
 FULLSCREENRES = (1024, 768)
 SINGLE = 0
 DOUBLE = 1
 
-# colors for stroop
-red = (255,0,0)
-blue = (0,0,255)
-yellow = (228, 241, 20)
-green = (0, 255, 0)
-
 
 ###########################################################
 # StroopExperiment Class
 ###########################################################
 class StroopExperiment(Experiment):
-    def __init__(self, laptop, experimentname, experimentversion):
-        
-        global criteria, highprobside
-        
-        pygame.init()
-        if laptop:
-            screenres = LAPTOPRES
-        else:
-            screenres = FULLSCREENRES
-        
-        Experiment.__init__(self, laptop, screenres, experimentname)
-        self.sd = -1
-        self.seqtype = -1
-        pygame.display.set_caption(experimentname)
-        
-        self.load_all_resources('images', 'sounds') ## this is from lib
-        
-        [self.cond, self.ncond, self.subj] = self.get_cond_and_subj_number('patterncode.txt')
-        
-        self.filename = "data/%s.dat" % self.subj ## have to change this to have the latest
-        self.datafile = open(self.filename, 'w')  ## library function
+    def __init__(self, nofullscreen, screenres, experimentname, **options):
+        Experiment.__init__(self, nofullscreen, screenres, experimentname, **options)
         
         startline = "I am subject %s in condition %s using version %s of the %s project" % (self.subj, self.cond, experimentversion, experimentname)
         self.output_trial([startline])
+        
         # to keep track of past responses
         self.responses = []
     
@@ -75,18 +47,20 @@ class StroopExperiment(Experiment):
     # show_instructions
     ###########################################################
     def show_instructions(self, filename):
-        background = self.show_centered_image(filename, white)
-        self.update_display(background)
+        self.show_centered_image(filename, bgcolor="white" )
+        self.update_display()
         
         ## below keeps it in a loop until the correct button is pressed
-        rt, res = self.get_response_and_rt(keys=["n"])
+        rt, val = self.get_response_and_rt( keys=['n'] )
     
     #------------------------------------------------------------
-    # place_text_image
+    # place_text_image_rotate
     #------------------------------------------------------------
-    def place_text_image_rotate(self, mysurf, prompt, size, xoff, yoff, txtcolor, bgcolor, angle):
-        text = self.get_text_image(pygame.font.Font(None, size), prompt, txtcolor, bgcolor)
-        text=pygame.transform.rotate(text,180)
+    def place_text_image_rotate(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
+        if not mysurf:
+            mysurf = self.background
+        text = self.get_text_image(font=font, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
+        text = pygame.transform.rotate(text, 180)
         textpos = text.get_rect()
         textpos.centerx = mysurf.get_rect().centerx + xoff
         textpos.centery = mysurf.get_rect().centery + yoff
@@ -101,21 +75,13 @@ class StroopExperiment(Experiment):
         
         # show word
         if rotate==False:
-            self.place_text_image(background, word, 64, 0, 0, wordcolor, black)
+            self.place_text_image(prompt=word, txtcolor=wordcolor)
         else:
-            self.place_text_image_rotate(background, word, 64, 0, 0, wordcolor, black, 180)
-        self.place_text_image(background, "Press 'r' for red,   Press 'g' for green,  Press 'y' for yellow,   Press 'b' for blue", 26, 0, 350, white, black)
-        # show color
+            self.place_text_image_rotate(prompt=word, txtcolor=wordcolor)
+        self.place_text_image( prompt="Press 'r' for red,   Press 'g' for green,  Press 'y' for yellow,   Press 'b' for blue", size=26, xoff=0, yoff=350)
+        self.update_display()
         
-        self.update_display(background)
-        
-        # measure reaction time
-        time_stamp = pygame.time.get_ticks()
-        while 1:
-            res = self.get_response()
-            if res == 'r' or res == 'g' or res == 'y' or res == 'b':
-                break
-        rt = pygame.time.get_ticks() - time_stamp
+        rt, res = self.get_response_and_rt( ['r', 'g', 'y', 'b'] )
         
         if res == correct_resp:
             hit = True
@@ -125,55 +91,44 @@ class StroopExperiment(Experiment):
         # display feedback
         background = self.clear_screen(black)
         if hit==False:
-            self.place_text_image(background, "Sorry that was incorrect!", 64, 0, 0, white, black)
+            self.place_text_image(prompt="Sorry that was incorrect!")
         else:
-            self.place_text_image(background, "Great!  That was correct!", 64, 0, 0, white, black)
+            self.place_text_image(prompt="Great!  That was correct!")
         
         # display feedback
-        self.update_display(background)
-        sleep(1.0)
+        self.update_display()
+        self.escapable_sleep(pause=1000)
         
-        background = self.clear_screen(black)
-        self.update_display(background)
-        sleep(0.8)
+        self.clear_screen()
+        self.update_display()
+        self.escapable_sleep(800)
         
         self.current_trial += 1
         return [res,rt,hit]
     
-           
-        
     ###########################################################
     # show_thanks
     ###########################################################
     def show_thanks(self):
+        #self.show_centered_image('thanks.jpg', "white")
         
-        global experimentname
-        background = self.show_centered_image('thanks.jpg', white)
-        
+        self.clear_screen('white')
         # show subject number and experment name
-        exp_text = "EXPERIMENT NAME: %s" % experimentname
-        text = self.get_text_image(pygame.font.Font(None, 32), exp_text, black, white)
-        textpos = self.placing_text(text, 0, 200, background)
-        background.blit(text, textpos)
-        
+        exp_text = "EXPERIMENT NAME: %s" % self.experimentname
         subj_text = "SUBJECT NUMBER: %s" % self.subj
-        text = self.get_text_image(pygame.font.Font(None, 32), subj_text, black, white)
-        textpos = self.placing_text(text, 0, 250, background)
-        background.blit(text, textpos)
         
-        self.screen.blit(background, (0,0))
-        pygame.display.flip()
+        self.place_text_image( prompt=exp_text, size=32, xoff=0, yoff=200, txtcolor="black", bgcolor="white" )
+        self.place_text_image( prompt=subj_text, size=32, xoff=0, yoff=250, txtcolor="black", bgcolor="white" )
+        self.update_display( )
         
-        while 1:
-            res = self.get_response()
-    
+        # Wait for spacebar to exit
+        self.get_response_and_rt(keys=["space"])
     
     ###########################################################
     # do_experiment
     ###########################################################
     def do_experiment(self):
         self.current_trial =0
-        
         
         # CODES FOR TRIALS
         # what are you responding to?
@@ -188,15 +143,18 @@ class StroopExperiment(Experiment):
         # is the word upside down?
         NORMAL = False
         INVERTED = True       
+        
         # show initial instructions
         self.show_instructions('maininstruction.jpg')
-        self.show_instructions('practiceword.jpg')
         
+        # Practice parameters
         nonwords=["KWLA","EXTM","BUTTER","FAST"]
         words=["BLUE","GREEN","RED","YELLOW"]
-        colors=[blue,green,red,yellow]
+        colors=["blue","green","red","yellow"]
         resp = ['b','g','r','y']
         
+        # 5 practice trials responding to word
+        self.show_instructions('practiceword.jpg')
         
         respondto = WORD
         orientation = NORMAL
@@ -218,9 +176,9 @@ class StroopExperiment(Experiment):
                 mycolor = colors[rc]
                 correct_resp = resp[ri]
             # do trial
-            [res,rt,hit]=self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
+            res, rt, hit =self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
         
-        
+        # 5 practice trials responding to color
         self.show_instructions('practicecolor.jpg')
         
         needle = random()
@@ -252,12 +210,12 @@ class StroopExperiment(Experiment):
             # do trial
             [res,rt,hit]=self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
         
+        # The real experiment
         self.show_instructions('begin.jpg')
-        
         
         nonwords=["CAR","HUNT","JXJT","PLXE"]
         words=["BLUE","GREEN","RED","YELLOW"]
-        colors=[blue,green,red,yellow]
+        colors=["blue","green","red","yellow"]
         resp = ['b','g','r','y']
         
         
@@ -331,8 +289,21 @@ class StroopExperiment(Experiment):
 ###########################################################
 
 def main():
-    global laptop, experimentname, experimentversion;
-    experiment = StroopExperiment(laptop, experimentname, experimentversion)
+    #global nofullscreen, experimentname, experimentversion;
+    options = dict(
+          experimentversion = experimentversion
+        , patterncode = "patterncode.txt"
+        , imagedir = "images"
+        , sounddir = "sounds"
+        , fgcolor = "white"
+        , bgcolor = "black"
+        , fontsize = 64
+    )
+    if nofullscreen:
+        screenres = LAPTOPRES
+    else:
+        screenres = FULLSCREENRES
+    experiment = StroopExperiment(nofullscreen, screenres, experimentname, **options)
     experiment.do_experiment()
     
 
