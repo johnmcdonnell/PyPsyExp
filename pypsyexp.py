@@ -77,6 +77,10 @@ class Experiment:
 
         self.trial = 0
         self.resources = {}
+        self.font = pygame.font.SystemFont( None, 32 )
+        self.bgcolor = white
+        self.fgcolor = black
+        self.background = self.clear_screen(self.bgcolor)
 
     #------------------------------------------------------------
     # load_all_resources
@@ -846,8 +850,8 @@ class TextPrompt:
                 break
             if self.value and pygame.key.get_pressed()[K_RETURN]:
                 break
-            if pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
-                self.on_exit()
+            if pygame.key.get_pressed()[K_RSHIFT] and pygame.key.get_pressed()[K_LSHIFT] and pygame.key.get_pressed()[K_BACKQUOTE]:
+                raise SystemExit
 
             # clear the screen
             self.screen.blit(self.background, (0,0))
@@ -857,7 +861,7 @@ class TextPrompt:
             
             # blit self on the sceen
             if centered:
-                self.center(offset = x)
+                self.center(offset = self.x)
             self.draw()
             # refresh the display
             pygame.display.flip()
