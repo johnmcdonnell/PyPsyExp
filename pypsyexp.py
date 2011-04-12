@@ -53,6 +53,17 @@ class MouseButton:
         print "Implemented in subclasses"
 
 def pgColor( colorid ):
+    """ 
+    Converts either an RGB tuple or a string into a valid rgb tuple.
+
+    Args:
+     * ``colorid`` (tuple or str): Color name or rgb tuple
+    
+    Returns:
+        If ``colorid`` is a tuple, this simply checks for validity.
+        If it is a string, looks it up pygame's built-in color dictionary, and
+        returns an rgb tuple corresponding to the name.
+    """
     if type( colorid ) == str:
         try:
             return pygame.color.THECOLORS[colorid]
@@ -69,8 +80,6 @@ def pgColor( colorid ):
     else:
         msg = "Invalid color value : %s" % colorid
         self.on_exit( msg )
-
-
 
 #------------------------------------------------------------
 # General purpose Experiment class
@@ -92,6 +101,7 @@ class Experiment:
          * ``experimentname`` (str): string that will be displayed as the title
            of the new window.
         Kwargs:
+         * ``experimentversion`` (str): The version name for the experiment.
          * ``fontname`` (str): Name of default font.
          * ``fontsize`` (int): Size of default font.
          * ``bgcolor`` (str or tuple): Backgound color. Default is white.
@@ -112,6 +122,11 @@ class Experiment:
          * ``verbose`` (bool): Print extra messages? Default is true.
          * ``framerate`` (int): Polling rate in fps.
          * ``suppresspygame`` (bool): Try not to use any pygame UI functions.
+        
+        sets:
+         * ``self.options`` (dict): All keyward arguments
+         * ``self.trial`` (dict): Signifies trial number. Initialized at 0.
+         * ...and all possible keyword arguments are assigned their own ``self.`` names.
         """
         # Initializes warning behavior.
         # Can be used to increase or decrease warning verbosity.
@@ -129,7 +144,7 @@ class Experiment:
             datadir = "data",
             outfilename = "",
             imagedir = "images",
-            soundsdir = "sounds",
+            sounddir = "sounds",
             ftphost = "",
             ftpuser = "",
             ftppassword = "",
@@ -150,7 +165,7 @@ class Experiment:
         self.datadir = self.options["datadir"]
         self.outfilename = self.options["outfilename"]
         self.imagedir = self.options["imagedir"]
-        self.soundsdir = self.options["soundsdir"]
+        self.sounddir = self.options["sounddir"]
         self.ftphost = self.options["ftphost"]
         self.ftpuser = self.options["ftpuser"]
         self.ftppassword = self.options["ftppassword"]
@@ -164,20 +179,21 @@ class Experiment:
             self.set_filename( self.outfilename )
         else:
             warning = """
-            WARNING: No patterncode file passed." self.cond, self.ncond, and
+            WARNING: No patterncode file passed. self.cond, self.ncond, and
             self.subj will not be set unless self.get_cond_and_subj_number is
-            called separately. Also, no datafile will be automatically loaded.
+            called separately. Also, no datafile will be automatically written.
             Calls to patterncode will default to assume that 'patterncode.txt'
             is the filename.
+            
+            To automatically read in a patterncode file, pass in a keword
+            argument for patterncode, e.g.:
+
+            myexp = Experiment( foo, bar, ..., patterncode="patterncode.txt" )
             """
             warn.warn( warning )
-        if "imagesdir" in useroptions.keys() and useroptions["imagesdir"]:
-            self.load_all_images( directory = useroptions["imagesdir"] )
-        if "soundsdir" in useroptions.keys() and useroptions["imagesdir"]:
-            self.load_all_sounds( directory = useroptions["imagesdir"] )
         
-        # UI initialization
         if not self.suppresspygame:
+            # UI initialization
             pygame.init()
             if self.nofullscreen:
                 self.screen = pygame.display.set_mode(screenres,
@@ -189,6 +205,50 @@ class Experiment:
             self.font = pygame.font.SysFont( self.fontname, self.fontsize )
             self.background = self.clear_screen()
             self.clock = pygame.time.Clock()
+            
+            # Loading imagedir (if it's been set)
+            if "imagedir" in useroptions.keys():
+                imgdirset = True
+                if not self.imagedir:
+                    self.imagedir = "."
+                    warn.warn( "'imagedir' was empty. Assuming experiment root directory." )
+                if not os.path.exists( self.imagedir ):
+                    msg= "Images Directory not found: %s" % self.imagedir
+                    self.on_exit(msg)
+            else:
+                imgdirset = False
+                if not os.path.exists( self.imagedir ):
+                    self.imagedir = "."
+                    warn.warn( "'imagedir' not set, and no directory named '%s' exists. Assuming experiment root directory.", self.imagedir )
+                else:
+                    warn.warn( "'imagedir' not set. Assuming %s" % self.imagedir )
+            
+            try:
+                self.load_all_images( directory = self.imagedir )
+            except IOError:
+                warn.warn( "Error loading images." )
+                self.on_exit()
+            
+            # Loading sounddir (if it's been set)
+            if "sounddir" in useroptions.keys():
+                if not self.sounddir:
+                    self.sounddir = "."
+                    warn.warn( "'sounddir' was empty. Assuming experiment root directory." )
+                if not os.path.exists( self.sounddir ):
+                    msg= "Sounds directory not found: %s" % self.sounddir
+                    self.on_exit(msg)
+            else:
+                if not os.path.exists( self.sounddir ):
+                    self.sounddir = "."
+                    warn.warn( "'sounddir' not set, and no directory named '%s' exists. Assuming experiment root directory.", self.sounddir )
+                else:
+                    warn.warn( "'sounddir' not set. Assuming %s" % self.sounddir )
+            
+            try:
+                self.load_all_sounds( directory = self.sounddir )
+            except IOError:
+                warn.warn( "Error loading sounds." )
+                self.on_exit()
         
         self.trial = 0
     
@@ -209,7 +269,7 @@ class Experiment:
          * ``self.datafile``
         """
         
-        if name == None:
+        if not name:
             name = `self.subj` + ".dat"
         
         self.filename = os.path.join( self.datadir, name )
@@ -233,6 +293,7 @@ class Experiment:
             raise Exception, "No filenames passed to load_all_resources."
         if img_directory:
             self.load_all_images(img_directory)
+
         if snd_directory:
             self.load_all_sounds(snd_directory)
     
@@ -255,13 +316,19 @@ class Experiment:
            ``self.resources``
        """
         if not directory:
-            raise Exception, "No directory passed to load_all_images."
+            directory =  self.imagedir
+        if not os.path.exists( directory ):
+            raise IOError( 0, 0, directory )
         files = [ fn for fn in os.listdir(os.path.join( os.curdir, directory ))
                  if fn[0] != "." and fn!="thumbs.db" ]
-        full_path_files = [ os.path.join( os.curdir, directory, fn) 
-                           for fn in files ]
-        images = [ self.load_image( fn ) for fn in full_path_files ]
-        self.resources.update( zip( files, images ) )
+        for fn in files:
+            full_path = os.path.join( os.curdir, directory, fn )
+            try:
+                image = self.load_image( full_path )
+            except IOError as e:
+                warn( "IO error on image file %s" % e.filename ) 
+                self.on_exit()
+            self.resources[fn] = image
     
     #------------------------------------------------------------
     # load_all_sounds
@@ -281,13 +348,19 @@ class Experiment:
             ``self.resources``
         """
         if not directory:
-            raise Exception, "No directory passed to load_all_images."
+            directory =  self.sounddir
+        if not os.path.exists( directory ):
+            raise IOError( 0,0,directory )
         files = [ fn for fn in os.listdir(os.path.join( os.curdir, directory ))
                  if fn[0] != "." and fn!="thumbs.db" ]
-        full_path_files = [ os.path.join( os.curdir, directory, fn) 
-                           for fn in files ]
-        sounds = [ pygame.mixer.Sound( fn ) for fn in full_path_files ]
-        self.resources.update( zip( files, sounds ) )
+        for fn in files:
+            full_path = os.path.join( os.curdir, directory, fn )
+            try:
+                sound = pygame.mixer.Sound( full_path )
+            except IOError as e:
+                warn( "IO error on sound file %s" % e.filename ) 
+                self.on_exit()
+            self.resources[fn] = sound
     
     #------------------------------------------------------------
     # load_image
@@ -443,6 +516,9 @@ class Experiment:
         myfile.close() # close deletes the tmpfile
         return map( int, lines )
     
+    #------------------------------------------------------------
+    # read_patterncode_liunes
+    #------------------------------------------------------------
     def read_patterncode_lines(self, lines):
         """
         Reads lines taken from a patterncode file.
@@ -1486,7 +1562,7 @@ class TextPrompt:
         return self._value
 
 def main():
-    pass
+    warn.warn( "This is the Python Psychology Experimnt library (pypsyexp) developed by the Computational Cognition lab at NYU." )
 
 if __name__ == '__main__':
     main()
