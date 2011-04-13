@@ -24,6 +24,10 @@ a:visited { color: #999; text-decoration: none; }
 a:hover { color: #666; }
 a:active { }
 
+ul {
+    list-style-image:url(images/bullet.png);
+}
+
 pre {
     font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     font-size: 0.95em;

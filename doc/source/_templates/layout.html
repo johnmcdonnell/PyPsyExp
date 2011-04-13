@@ -1,9 +1,12 @@
+
 {% extends "!layout.html" %}
+<link rel="stylesheet" href="_static/default.css" type="text/css" />
 
 
 {% block rootrellink %}
         <li><a href="{{ pathto('index') }}">home</a>|&nbsp;</li>
         <li><a href="{{ pathto('search') }}">search</a>|&nbsp;</li>
+        <li><a href="{{ pathto('pypsyexp') }}">documentation</a>|&nbsp;</li>
 {% endblock %}
 
 

@@ -1378,14 +1378,18 @@ class MouseButton:
 # Creates a GaborPatch object, which is drawn by calling draw_gabor.
 #------------------------------------------------------------
 class GaborPatch:
+    """
+    The ``GaborPatch`` object initializes the gabor patch when it is called. It
+    can then be drawn by callind ``draw_gabor``.
+    """
     def __init__(self, grid_w=10, grid_h=10, windowsd=1):
         """ 
-        Sets up initial values for a gabor patch and its gaussian blur.
+        Sets up initial values for a gabor patch.
         
         Arguments:
-         * grid_w (int): width
-         * grid_h (int): height 
-         * windowsd (float): standard deviation  
+         * ``grid_w`` (int): width
+         * ``grid_h`` (int): height 
+         * ``windowsd`` (float): standard deviation  
         """
         # TODO: Gabors should also in principle have equal luminance.
         self.w = grid_w
@@ -1401,17 +1405,13 @@ class GaborPatch:
     #------------------------------------------------------------
     def draw_gabor(self, freq, angle, scale):
         """ 
-        This is a demo for using gabor patches. Call setup_gabor to set initial
-        values for the gabor patch, then draw_gabor to actually draw it to a
-        surface. They are thin wrappers to the GaborPatch class.
-        
-        Draws the gabor patch set by 'setup_gabor' 
+        Draws the gabor patch.
         
         Args:
          * ``freq`` (int): the frequency of the gabor patch.
          * ``angle`` (int): value to determine rotation on the patch. WARNING:
            units are degrees/2.
-         * ``scale``(int) - enlarges the gabor patch by a given factor.
+         * ``scale`` (int) - enlarges the gabor patch by a given factor.
         
         .. WARNING::
             Due to a bug in ``pygame``, ``angle`` is in units of degrees/2.
@@ -1456,7 +1456,10 @@ class GaborPatch:
     #------------------------------------------------------------   
     def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul):
         """ 
-        Formula used to set the gaussion blur 
+        Formula used to set the gaussion blur. Covariance is fixed at 0.
+
+        .. math::
+            \mathrm{pdf}(\mathcal{N}(\mu, \Sigma), \mathbf{x}) = (2\pi)^{-k/2} |\Sigma|^{- 1/2} e^{-(1/2)(\mathbf{x}-\mu)'\Sigma^{-1}(\mathbf{x}-\mu)}
         
         Args:
          * ``x`` - current position in the grid
@@ -1467,10 +1470,10 @@ class GaborPatch:
          * ``mu_y`` - mean on the ``y`` dimension.
          * ``mul`` - scales by this amplitude factor 
         
-        Returns
+        Returns:
          The pdf for the given distribution at the given coordinates.
         """ 
-        return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
+        return mul / (2.0*pi*sigma_x*sigma_y) * exp(-.5*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
 
 class TextPrompt:
     """

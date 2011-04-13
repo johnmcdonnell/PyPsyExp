@@ -7,10 +7,12 @@
 What is PyPsyExp?
 ====================================
 
-PyPsyExp is a user-friendly library for developing psychology experiments
-using Python, Pygame and NumPy. While (currently) not as full featured as
-something like VisionEgg or the Psychophysics toolbox, we may be exactly
-what you are looking for if you need a simple way to design a higher-level
+PyPsyExp is a user-friendly and cross-platform library for developing
+psychology experiments using Python, Pygame and NumPy. While (currently) not
+as full featured as something like `VisionEgg <http://www.visionegg.org/>`_
+or the `Psychophysics toolbox <http://psychtoolbox.org/>`_, our objective is
+to provide a clean and simple toolkit that may be exactly what you are
+looking for if you need a straightforward way to design a higher-level
 cognition experiment.
 
 What does "higher-level" mean? It means you need a way to design simple, but
@@ -18,15 +20,25 @@ interactive experiments that involve presenting information on a computer
 screen (but don't need millisecond accuracy on display refreshes) and
 measuring a participant's responses and reaction time. 
 
+
+Features
+------------
+ * Several input methods, such as mouse buttons and text boxes.
+ * Automatic counterbalancing and data recording, across computers and even
+   labs via FTP.
+ * Complete cross-platform support; the same code should run on Windows, Macs,
+   and UNIX machines.
+ * Entirely free and open source. Free to extend in any way you want.
+
 Quick setup
 ====================================
 
 Dependencies
 ------------
 To use pypsyexp. you'll need 
- * `Python 2.x <http://python.org>`_
- * `numpy <http://numpy.org>`_
- * `pygame <http://pygame.org>`_
+ * `Python 2.x <http://python.org>`_: A powerful scripting language summarized `here <http://xkcd.com/353/>`_
+ * `NumPy <http://numpy.org>`_: A module for numerical computation in Python.
+ * `PyGame <http://pygame.org>`_: A Python wrapper for `libsdl <http://libsdl.org>`_, an open source multimedia library.
 
 Download
 --------
@@ -53,6 +65,8 @@ we would recommend, defining a class called ``StroopExperiment`` which extends
 the ``Experiment`` class defined in the ``pypsyexp`` library. To build your own
 experiment, you can simply alter this file to suit your needs.
 
+For more information, check out our tutorial on the Stroop experiment `here <http://smash.psych.nyu.edu/pypsyexp/stroop1.php>`_.
+
 
 Documentation:
 =============
@@ -61,7 +75,13 @@ Documentation:
     :maxdepth: 2
     
     pypsyexp
+    Tutorials
 
+Contact info:
+=============
+If you're using (or trying to use) pypsyexp and have run into bugs that need
+fixing, features you'd like to see, or if you're just having trouble doing what
+you want, send us an email at XXX@nyu.edu.
 
 Indices and tables
 ==================

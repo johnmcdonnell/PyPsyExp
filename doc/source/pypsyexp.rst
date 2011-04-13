@@ -6,6 +6,7 @@ PyPsyExp
 Experiment
 ------------------------------------
 .. autoclass:: pypsyexp.Experiment
+   :undoc-members:
    :members:
 
 ------------------------------------
