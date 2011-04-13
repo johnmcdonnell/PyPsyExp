@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyPsyExp &mdash; PyPsyExp v2010.04 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2010.04',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyPsyExp v2010.04 documentation" href="index.html" />
+    <link rel="prev" title="What is PyPsyExp?" href="index.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/images/pypsyexptitle.png" border="0" alt="pypsyexp"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="What is PyPsyExp?"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyPsyExp</a><ul>
+<li><a class="reference internal" href="#experiment">Experiment</a></li>
+<li><a class="reference internal" href="#textprompt">TextPrompt</a></li>
+<li><a class="reference internal" href="#mousebutton">MouseButton</a></li>
+<li><a class="reference internal" href="#gaborpatch">GaborPatch</a></li>
+<li><a class="reference internal" href="#useful-functions">Useful functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">What is PyPsyExp?</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/pypsyexp.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pypsyexp">
+<h1>PyPsyExp<a class="headerlink" href="#pypsyexp" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="experiment">
+<h2>Experiment<a class="headerlink" href="#experiment" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pypsyexp.Experiment">
+<em class="property">class </em><tt class="descclassname">pypsyexp.</tt><tt class="descname">Experiment</tt><big>(</big><em>nofullscreen</em>, <em>screenres</em>, <em>experimentname</em>, <em>**useroptions</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>The experiment class is a general purpose class.</p>
+<dl class="method">
+<dt id="pypsyexp.Experiment.check_for_exit">
+<tt class="descname">check_for_exit</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.check_for_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.check_for_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for the exit sequence: left shift plus ~.
+Overload this function to use a different exit keystroke.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.clear_screen">
+<tt class="descname">clear_screen</tt><big>(</big><em>color=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.clear_screen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.clear_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Surface with the dimensions of the display screen, fills
+it with a given color, and returns the Surface.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">color</span></tt> (str of tuple): Color to draw on screen (name or rgb).
+Defaults to <tt class="docutils literal"><span class="pre">self.bgcolor</span></tt>.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.draw_gabor">
+<tt class="descname">draw_gabor</tt><big>(</big><em>freq</em>, <em>angle</em>, <em>scale</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.draw_gabor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.draw_gabor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a demo for using gabor patches. Call setup_gabor to set initial
+values for the gabor patch, then draw_gabor to actually draw it to a
+surface. They are thin wrappers to the GaborPatch class.</p>
+<p>Draws the gabor patch set by &#8216;setup_gabor&#8217;</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">freq</span></tt> (int): the frequency of the gabor patch</li>
+<li><tt class="docutils literal"><span class="pre">angle</span></tt> (int): value to determine rotation on the patch. WARNING:
+units are degrees/2</li>
+<li><tt class="docutils literal"><span class="pre">scale</span></tt> (int) - enlarges the gabor patch by a given factor</li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Due to a bug in <tt class="docutils literal"><span class="pre">pygame</span></tt>, <tt class="docutils literal"><span class="pre">angle</span></tt> is in units of degrees/2.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>For faster blitting it is recommended to set the <tt class="docutils literal"><span class="pre">grid_w</span></tt> and
+<tt class="docutils literal"><span class="pre">grid_h</span></tt> in <tt class="docutils literal"><span class="pre">setup_gabor</span></tt> to be smaller than the actual patch
+desired. To offset this, use the scale value to blow up the image.</p>
+<p class="last">Due to the nature of rotating a surface, the size of the surface the
+gabor patch changes based on the value of the rotation angle. This
+function re-centers the patch after each rotation, but it should be
+noted as it will make the area of the surface larger.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.draw_on_screen_example">
+<tt class="descname">draw_on_screen_example</tt><big>(</big><em>background=None</em>, <em>color=None</em>, <em>break_key=32</em>, <em>radius=3</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.draw_on_screen_example"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.draw_on_screen_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an example of how to allow participants to draw on the screen
+with a mouse. They can draw by clicking and dragging the mouse.
+Pressing the break_key exits the drawing environment.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li>background (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): The surface to draw to. Defaults to
+<tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">color</span></tt> (str or tuple): The maker color. Defaults to
+<tt class="docutils literal"><span class="pre">self.fgcolor</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">break_key</span></tt> (int (from <tt class="docutils literal"><span class="pre">pygame.locals</span></tt>): Pressing this key
+terminates drawing.</li>
+<li><tt class="docutils literal"><span class="pre">radius</span></tt> (int): The radius of the drawing brush.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.draw_square">
+<tt class="descname">draw_square</tt><big>(</big><em>surf=None</em>, <em>color=None</em>, <em>x=0</em>, <em>y=0</em>, <em>width=10</em>, <em>height=10</em>, <em>thick=0</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.draw_square"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.draw_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a square of the size and coordinates requested to the background,
+and returns the result.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to draw to. Defaults to
+<tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">color</span></tt> (str of tuple): Color of rectangle (name or rgb).</li>
+<li><tt class="docutils literal"><span class="pre">x</span></tt> (int): The coordinate of the left side of the rectangle.</li>
+<li><tt class="docutils literal"><span class="pre">y</span></tt> (int): The coordinate of the top of the rectangle.</li>
+<li><tt class="docutils literal"><span class="pre">width</span></tt> (int): The width of the rectangle. Defaults to <tt class="docutils literal"><span class="pre">10</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">height</span></tt> (int): The height of the rectangle. Defaults to <tt class="docutils literal"><span class="pre">10</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">thick</span></tt> (int): The thickness of the rectangle border. If thick is
+<tt class="docutils literal"><span class="pre">0</span></tt> (the default), the rectangle is filled and has no border.
+Otherwise it is not filled.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.escapable_sleep">
+<tt class="descname">escapable_sleep</tt><big>(</big><em>pause=1000</em>, <em>esckey=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.escapable_sleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.escapable_sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauses the program for &#8216;pause&#8217;-number of milliseconds. Can be exited
+via the default keystroke in``check_for_exit``.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">pause</span></tt> (int): (in milliseconds) Amount of time to sleep for.</li>
+<li><tt class="docutils literal"><span class="pre">esckey</span></tt> (int; from <tt class="docutils literal"><span class="pre">pygame.locals</span></tt>): A key that, if pressed,
+will end the pause.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_cond_and_subj_number">
+<tt class="descname">get_cond_and_subj_number</tt><big>(</big><em>filename=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_cond_and_subj_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_cond_and_subj_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a patterncode file that must contain the following three values
+on its first three lines:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Condition current subject will be in.</li>
+<li>Number of conditions.</li>
+<li>Current subject number (automatically updated).</li>
+</ol>
+</div></blockquote>
+<p>After reading the text file, the condition number and subject number
+are automatically updated and written back into the file for subsequent
+runnings.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): Path to the patterncode file. Defaults to
+<tt class="docutils literal"><span class="pre">patterncode.txt</span></tt></li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of the items in the file, in int form.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_cond_and_subj_number_ftp">
+<tt class="descname">get_cond_and_subj_number_ftp</tt><big>(</big><em>host=''</em>, <em>username=''</em>, <em>password=''</em>, <em>filename=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_cond_and_subj_number_ftp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_cond_and_subj_number_ftp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar functionallity to <tt class="docutils literal"><span class="pre">get_cond_and_subj_number</span></tt>. Reads data
+from a remote ftp client in order to set up participant numbers and
+conditions. The host, username, and password can be set during the
+initialization of the <tt class="docutils literal"><span class="pre">Experiment</span></tt> object.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">host</span></tt> (str): web address of file hosting site</li>
+<li><tt class="docutils literal"><span class="pre">username</span></tt> (str): account name on the host site</li>
+<li><tt class="docutils literal"><span class="pre">password</span></tt> (str): password for the account</li>
+<li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): name of patterncode file, defaults to
+<tt class="docutils literal"><span class="pre">patterncode.txt</span></tt></li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list containing the lines in the file, converted to ints.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_response">
+<tt class="descname">get_response</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for a key to be pressed, then Returns the key mapping for a
+single pressed letter, ignoring modifier keys. Actual key mappings are
+found in libSDL source, in: <tt class="docutils literal"><span class="pre">$SDLROOT/src/SDL_keyboard.c</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_response_and_rt">
+<tt class="descname">get_response_and_rt</tt><big>(</big><em>keys=['p', 'q'], val=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_response_and_rt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_response_and_rt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monitors keyboard Events for the given set of keys (default <tt class="docutils literal"><span class="pre">Q</span></tt> and
+&#8216;P&#8217;). Case insensitive. Returns the time it took from the call to the
+function to the end of the function (reaction time; rt) and the coded
+version of the response (given in &#8216;val&#8217;).</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">keys</span></tt> (list or tuple of strings) where the keys are the names of
+the keys that will be pressed. Defaults to <tt class="docutils literal"><span class="pre">[q,</span> <span class="pre">p]</span></tt>. Keypad
+numbers == keyboard numbers (although this could change) For a full
+list of valid key names, see the libSDL source, under
+<tt class="docutils literal"><span class="pre">$SDLroot/src/SDL_keyboard.c</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">val</span></tt> (list or tuple) with coded values, e.g. <tt class="docutils literal"><span class="pre">['Left',</span>
+<span class="pre">'Right']</span></tt> or <tt class="docutils literal"><span class="pre">(0,</span> <span class="pre">1)</span></tt>. Defaults to be the same as <tt class="docutils literal"><span class="pre">keys</span></tt>.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list with reaction time and the value code for the response made.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_response_and_rt_pq">
+<tt class="descname">get_response_and_rt_pq</tt><big>(</big><em>val=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_response_and_rt_pq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_response_and_rt_pq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monitors keyboard Events for the <tt class="docutils literal"><span class="pre">Q</span></tt> and <tt class="docutils literal"><span class="pre">P</span></tt> keys. Returns the time
+it took from the call to the function to the end of the function
+(reaction time; rt) and the response made (res).</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">val</span></tt> (list or tuple) with coded values, e.g. <tt class="docutils literal"><span class="pre">['Left',</span>
+<span class="pre">'Right']</span></tt> or <tt class="docutils literal"><span class="pre">(0,</span> <span class="pre">1)</span></tt></li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list with reaction time and the value code for the response made.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.get_text_image">
+<tt class="descname">get_text_image</tt><big>(</big><em>font=None</em>, <em>message=''</em>, <em>fgcolor=None</em>, <em>bgcolor=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_text_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Surface with anti-aliased text written on it, and returns it.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">font</span></tt> (<tt class="docutils literal"><span class="pre">pygame.font</span></tt>): The font to use for the text.</li>
+<li><tt class="docutils literal"><span class="pre">message</span></tt> (str): String to be displayed</li>
+<li><tt class="docutils literal"><span class="pre">fontcolor</span></tt> (str or tuple): Color for text (RGB or name)</li>
+<li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Color for the background (RGB or name)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The surface with text written to it.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.load_all_images">
+<tt class="descname">load_all_images</tt><big>(</big><em>directory=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.load_all_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.load_all_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads images and places their corresponding objects into
+<tt class="docutils literal"><span class="pre">self.resources</span></tt>. Filters out <tt class="docutils literal"><span class="pre">Thumbs.db</span></tt> files (in the case of
+Macs) and hidden system files. The function filters out <tt class="docutils literal"><span class="pre">Thumbs.db</span></tt>
+files (in the case of Macs) and UNIX system files (starting with <tt class="docutils literal"><span class="pre">.</span></tt>).
+All images are placed in a list called <tt class="docutils literal"><span class="pre">self.resources</span></tt>.  All images
+must be referenced by name, e.g.  <tt class="docutils literal"><span class="pre">self.resources['image1.gif']</span></tt>.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">directory</span></tt> (str): Path to the folder containing images.</li>
+</ul>
+</dd>
+<dt>Modifies:</dt>
+<dd><tt class="docutils literal"><span class="pre">self.resources</span></tt></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.load_all_resources">
+<tt class="descname">load_all_resources</tt><big>(</big><em>img_directory=''</em>, <em>snd_directory=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.load_all_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.load_all_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads images and sounds by calling <tt class="docutils literal"><span class="pre">load_all_images</span></tt> and
+<tt class="docutils literal"><span class="pre">load_all_sounds</span></tt>.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">img_directory</span></tt> (str): Path to the folder containing
+images.</li>
+<li><tt class="docutils literal"><span class="pre">snd_directory</span></tt> (str): Path to the folder containing
+sounds.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.load_all_sounds">
+<tt class="descname">load_all_sounds</tt><big>(</big><em>directory=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.load_all_sounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.load_all_sounds" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">load_all_sounds</span></tt> takes one value, the path to the folder containing
+sound files.  The function filters out <tt class="docutils literal"><span class="pre">Thumbs.db</span></tt> files (in the case
+of Macs) and UNIX system files (starting with <tt class="docutils literal"><span class="pre">.</span></tt>). All sounds are
+placed in a list called <tt class="docutils literal"><span class="pre">self.resources</span></tt>. All sounds must be
+referenced by name, i.e.  <tt class="docutils literal"><span class="pre">self.resources['sound1.wav'].play()</span></tt></p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">directory</span></tt> (str): Path to the folder containing images.</li>
+</ul>
+</dd>
+<dt>Updates:</dt>
+<dd><tt class="docutils literal"><span class="pre">self.resources</span></tt></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.load_image">
+<tt class="descname">load_image</tt><big>(</big><em>filename</em>, <em>colorkey=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.load_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.load_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to load an image given its filename.</p>
+<p>It has two means of determining which color will be made transparent:</p>
+<ol class="arabic simple">
+<li>If <tt class="docutils literal"><span class="pre">colorkey</span></tt> is not <tt class="xref docutils literal"><span class="pre">None</span></tt>, then the color passed will be made
+transparent.  If <tt class="docutils literal"><span class="pre">colorkey</span></tt> is <tt class="docutils literal"><span class="pre">-1</span></tt>, then the RGB value in the
+top left-most pixel of the image will be set as the colorkey.</li>
+<li>If the filename is of the format <tt class="docutils literal"><span class="pre">*-transp-x-y.EXT</span></tt>, where <tt class="docutils literal"><span class="pre">EXT</span></tt>
+is the file e``x``tension, then <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt> are the <tt class="docutils literal"><span class="pre">x</span></tt> and
+<tt class="docutils literal"><span class="pre">y</span></tt> coordinates of the pixel that will be made transparent.</li>
+</ol>
+<p>If neither of these conditions are met, the image will not have
+transparency.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): path to image file.</li>
+</ul>
+</dd>
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">colorkey</span></tt> (tuple of ints): path to image file.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The resulting image object.</dd>
+<dt>Raises:</dt>
+<dd><tt class="docutils literal"><span class="pre">pygame.error</span></tt></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.on_exit">
+<tt class="descname">on_exit</tt><big>(</big><em>msg=''</em>, <em>exception=&lt;type 'exceptions.SystemExit'&gt;</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.on_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.on_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all data that remains on queue and closes <tt class="docutils literal"><span class="pre">self.datafile</span></tt>.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li>msg (str): Exit message.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.output_trial">
+<tt class="descname">output_trial</tt><big>(</big><em>myline</em>, <em>echo=False</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.output_trial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.output_trial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a list of data to a file as a line in which each value seperated
+by a space.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">myline</span></tt> (iterable): Iterable of items to be written to the line</li>
+</ul>
+</dd>
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">echo</span></tt> (bool): If <tt class="xref docutils literal"><span class="pre">True</span></tt>, prints the line to the screen.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.place_text_image">
+<tt class="descname">place_text_image</tt><big>(</big><em>mysurf=None</em>, <em>prompt=''</em>, <em>size=None</em>, <em>xoff=0</em>, <em>yoff=0</em>, <em>txtcolor=None</em>, <em>bgcolor=None</em>, <em>font=None</em>, <em>fontname=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.place_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.place_text_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blits a Text object to the surface passed.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface object to be blitted to.</li>
+<li><tt class="docutils literal"><span class="pre">prompt</span></tt> (str): String to be displayed</li>
+<li><tt class="docutils literal"><span class="pre">size</span></tt> (int): text size</li>
+<li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">yoff</span></tt> (int): Vertical offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">txtcolor</span></tt> (str or tuple): Color of the test (name or RGB).</li>
+<li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Color of the background (name or RGB).</li>
+<li><tt class="docutils literal"><span class="pre">font</span></tt> (<tt class="docutils literal"><span class="pre">pygame.font</span></tt>): Font object to use for text rendering.</li>
+<li><tt class="docutils literal"><span class="pre">fontname</span></tt> (str): Name of font to use.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A pygame surface object with the text placed on it.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.placing_rect">
+<tt class="descname">placing_rect</tt><big>(</big><em>bkgd_surf=None</em>, <em>inner_surf=None</em>, <em>xoff=0</em>, <em>yoff=0</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.placing_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.placing_rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Rect from Surface <tt class="docutils literal"><span class="pre">inner_surf</span></tt> and places it onto
+Surface <tt class="docutils literal"><span class="pre">bkgd_surf</span></tt>.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">bkgd_surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to write to.</li>
+<li><tt class="docutils literal"><span class="pre">inner_surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to write to the other
+surface.</li>
+<li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">yoff</span></tt> (int): Vertical offset from center.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The surface created.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.play_sound">
+<tt class="descname">play_sound</tt><big>(</big><em>sndname</em>, <em>pause=0</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.play_sound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.play_sound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plays a sound file for its length plus and length &#8216;pause&#8217; in
+milliseconds. This function works with .wav files only. It pauses
+the timer.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">sndname</span></tt> (str): The sound name (omit the .wav extension)</li>
+</ul>
+</dd>
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">pause</span></tt> (int): Time in milliseconds to pause the pygame timer</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The sound duration plus pause.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.prompt_text">
+<tt class="descname">prompt_text</tt><big>(</big><em>background=None</em>, <em>x=0</em>, <em>y=0</em>, <em>timelimit=None</em>, <em>prompt=''</em>, <em>fontsize=None</em>, <em>maxlength=40</em>, <em>fgcolor=None</em>, <em>centered=False</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.prompt_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.prompt_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an onscreen prompt for users to enter a single line of text.</p>
+<dl class="docutils">
+<dt>Kwargs: </dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">background</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): the surface that will be
+refreshed; defaults to <tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">x</span></tt> (int): The horizontal coordinate, determining the left side of
+the prompt, or the center if <tt class="docutils literal"><span class="pre">centered</span></tt> is <tt class="xref docutils literal"><span class="pre">True</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">y</span></tt> (int): The vertical coordinate, determining the top of
+the prompt, or the center if <tt class="docutils literal"><span class="pre">centered</span></tt> is <tt class="xref docutils literal"><span class="pre">True</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">timelimit</span></tt> (int): (in milliseconds). Default is <tt class="xref docutils literal"><span class="pre">None</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">prompt</span></tt> (str): To be printed in front of the typed text. Default
+is a null string.</li>
+<li><tt class="docutils literal"><span class="pre">fontsize</span></tt> (int): Size of text printed on screen. Default is
+<tt class="docutils literal"><span class="pre">32</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">maxlength</span></tt> (int): Maximum number of characters allowed to be
+typed.  Default is <tt class="docutils literal"><span class="pre">40</span></tt>. <tt class="docutils literal"><span class="pre">0</span></tt> means unlimited.</li>
+<li><tt class="docutils literal"><span class="pre">fgcolor</span></tt> (str or tuple): Color of text; name or rgb tuple.
+Default is <tt class="docutils literal"><span class="pre">self.fgcolor</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">centered</span></tt> (bool): Maintain a centered alignment. <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt>
+become offset of center if <tt class="xref docutils literal"><span class="pre">True</span></tt>. Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The typed text as it appeared on the screen.</dd>
+<dt>Possible future options:</dt>
+<dd>Restrictions on possible characters.
+Control over typeface.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.read_patterncode_lines">
+<tt class="descname">read_patterncode_lines</tt><big>(</big><em>lines</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.read_patterncode_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.read_patterncode_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads lines taken from a patterncode file.
+File should consists of 3 lines, as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Condition current subject will be in</li>
+<li>Number of conditions</li>
+<li>Current subject number (automatically updated)</li>
+</ol>
+</div></blockquote>
+<p>Writes values to <tt class="docutils literal"><span class="pre">self.cond</span></tt>, <tt class="docutils literal"><span class="pre">self.ncond</span></tt>, and <tt class="docutils literal"><span class="pre">self.subj</span></tt>.
+Returns the new lines to be written back to the file.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">lines</span></tt> (list of strs): Lines read in from patterncode file.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of the strings&#8217; new lines.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.set_filename">
+<tt class="descname">set_filename</tt><big>(</big><em>name=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.set_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.set_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets and opens file to be written. If the name field is not
+passed, the datafile opened is named the current subject
+number.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">name</span></tt> (str): The filename.</li>
+</ul>
+</dd>
+<dt>Sets:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">self.filename</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">self.datafile</span></tt></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.setup_gabor">
+<tt class="descname">setup_gabor</tt><big>(</big><em>grid_w</em>, <em>grid_h</em>, <em>windowsd</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.setup_gabor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.setup_gabor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a demo for using gabor patches. Call setup_gabor to set initial
+values for the gabor patch, then draw_gabor to actually draw it to a
+surface. They are thin wrappers to the GaborPatch class.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">grid_w</span></tt> (int): width</li>
+<li><tt class="docutils literal"><span class="pre">grid_h</span></tt> (int): height</li>
+<li><tt class="docutils literal"><span class="pre">windowsd</span></tt> (float): standard deviation</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.show_centered_image">
+<tt class="descname">show_centered_image</tt><big>(</big><em>imagename</em>, <em>bgcolor=None</em>, <em>alpha=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.show_centered_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.show_centered_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centers an image in the screen with a given bgcolor.</p>
+<dl class="docutils">
+<dt>Args: </dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Name of image.</li>
+</ul>
+</dd>
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Background color (name or RGB)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A surface with the image blitted over a field of <tt class="docutils literal"><span class="pre">bgcolor</span></tt>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.show_centered_image_add">
+<tt class="descname">show_centered_image_add</tt><big>(</big><em>mysurf=None</em>, <em>imagename=None</em>, <em>alpha=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.show_centered_image_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.show_centered_image_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centers an image in the surface passed. Default surface is
+<tt class="docutils literal"><span class="pre">self.background</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This REQUIRES a Surface object to be passed, whereas show_image
+creates a Surface to be blitted on</p>
+</div>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to blit to. Defaults to <tt class="docutils literal"><span class="pre">self.background</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Mandatory. Name of image (must be in
+<tt class="docutils literal"><span class="pre">self.resources</span></tt>).</li>
+<li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">yoff</span></tt> (int): Vertical offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">alpha</span></tt> (float): Amount of opacity. Defaults to fully opaque.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A surface with the image added.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.show_image">
+<tt class="descname">show_image</tt><big>(</big><em>imagename</em>, <em>bgcolor=None</em>, <em>xoff=0</em>, <em>yoff=0</em>, <em>alpha=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.show_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.show_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a surface object with the dimensions of the display screen.
+Then blits an image to the center of the surface plus any offseting
+height/width. The surface is then returned.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This <em>creates</em> a Surface object, whereas show_image_add is passed a
+surface to be blitted on.</p>
+</div>
+<dl class="docutils">
+<dt>Args: </dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Name of image (must be in <tt class="docutils literal"><span class="pre">self.resources</span></tt>).</li>
+</ul>
+</dd>
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Background color (name or RGB)</li>
+<li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">yoff</span></tt> (int): Vertical offset from center.</li>
+<li><tt class="docutils literal"><span class="pre">alpha</span></tt> (float): Amount of opacity. Defaults to fully opaque.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A surface with the image blitted over a field of <tt class="docutils literal"><span class="pre">bgcolor</span></tt>.</dd>
+<dt>Raises:</dt>
+<dd><ul class="first last simple">
+<li>KeyError: Image not found.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.show_image_add">
+<tt class="descname">show_image_add</tt><big>(</big><em>mysurf=None</em>, <em>imagename=None</em>, <em>xoffset=0</em>, <em>yoffset=0</em>, <em>alpha=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.show_image_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.show_image_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places an image onto a passed Surface with given offsets relative to
+the center of the Surface. Returns the drawn-on Surface.</p>
+<p>mysurf - Surface to be blitted to imagename - name of the image file
+loaded by load_image (or load_all_images) xoffset/offset - offsets
+relative to the center of the Surface alpha - alpha value of the image</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This REQUIRES a Surface object to be passed, whereas show_image
+creates a Surface to be blitted on</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.tick">
+<tt class="descname">tick</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.tick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits until a given time based on <tt class="docutils literal"><span class="pre">self.framerate</span></tt>. Useful while in a
+loop, to limit the rate at which it loops.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.update_display">
+<tt class="descname">update_display</tt><big>(</big><em>mysurf=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.update_display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.update_display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blits the surface passed to the default display screen created by 
+the experiment class. Then flips it.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): The surface to be written to the
+screen.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.Experiment.upload_data">
+<tt class="descname">upload_data</tt><big>(</big><em>host=''</em>, <em>username=''</em>, <em>password=''</em>, <em>filename=''</em>, <em>netfilename=''</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.upload_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.upload_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads data to a file storage site.  FTP credentials can be set during
+the initialization of the <tt class="docutils literal"><span class="pre">Experiment</span></tt> object.</p>
+<dl class="docutils">
+<dt>Kwargs:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">host</span></tt> (str): Hostname of ftp server.</li>
+<li><tt class="docutils literal"><span class="pre">username</span></tt> (str): Username on server.</li>
+<li><tt class="docutils literal"><span class="pre">password</span></tt> (str): Password to server.</li>
+<li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): Local file that will be uploaded. Defaults to
+<tt class="docutils literal"><span class="pre">self.filename</span></tt>.</li>
+<li><tt class="docutils literal"><span class="pre">netfilename</span></tt> (str): Name of file to be written to server.
+Defaults to <tt class="docutils literal"><span class="pre">filename</span></tt>.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="textprompt">
+<h2>TextPrompt<a class="headerlink" href="#textprompt" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pypsyexp.TextPrompt">
+<em class="property">class </em><tt class="descclassname">pypsyexp.</tt><tt class="descname">TextPrompt</tt><big>(</big><em>screen</em>, <em>background</em>, <em>**useroptions</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt" title="Permalink to this definition">¶</a></dt>
+<dd><p>A text input prompt. Allows the on-screen editing of a single line of text.</p>
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.center">
+<tt class="descname">center</tt><big>(</big><em>offset=0</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the text input to the screen</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.get_text_line">
+<tt class="descname">get_text_line</tt><big>(</big><em>centered=False</em>, <em>timelimit=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.get_text_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.get_text_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompts the user for a line of text, updating it as they type.</p>
+<p>The escape sequence here is to press both shift keys and tilde (this is
+to prevent subjects from accidentally quitting the experiment using
+tilde).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.set_font">
+<tt class="descname">set_font</tt><big>(</big><em>font</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.set_font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.set_font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the font for the input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.set_pos">
+<tt class="descname">set_pos</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.set_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.set_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the position to x, y</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.TextPrompt.update">
+<tt class="descname">update</tt><big>(</big><em>events</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#TextPrompt.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.TextPrompt.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the input based on a list of events passed in.
+Returns true if enter is pressed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="mousebutton">
+<h2>MouseButton<a class="headerlink" href="#mousebutton" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pypsyexp.MouseButton">
+<em class="property">class </em><tt class="descclassname">pypsyexp.</tt><tt class="descname">MouseButton</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#MouseButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.MouseButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Button class based on the
+template method pattern.</p>
+<dl class="method">
+<dt id="pypsyexp.MouseButton.containsPoint">
+<tt class="descname">containsPoint</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#MouseButton.containsPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.MouseButton.containsPoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.MouseButton.do">
+<tt class="descname">do</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#MouseButton.do"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.MouseButton.do" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gaborpatch">
+<h2>GaborPatch<a class="headerlink" href="#gaborpatch" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pypsyexp.GaborPatch">
+<em class="property">class </em><tt class="descclassname">pypsyexp.</tt><tt class="descname">GaborPatch</tt><big>(</big><em>grid_w=10</em>, <em>grid_h=10</em>, <em>windowsd=1</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#GaborPatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.GaborPatch" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pypsyexp.GaborPatch.bivariate_normpdf">
+<tt class="descname">bivariate_normpdf</tt><big>(</big><em>x</em>, <em>y</em>, <em>sigma_x</em>, <em>sigma_y</em>, <em>mu_x</em>, <em>mu_y</em>, <em>mul</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#GaborPatch.bivariate_normpdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.GaborPatch.bivariate_normpdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formula used to set the gaussion blur</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">x</span></tt> - current position in the grid</li>
+<li><tt class="docutils literal"><span class="pre">y</span></tt> - current position in the grid</li>
+<li><tt class="docutils literal"><span class="pre">sigma_y</span></tt> - variance in each plane of the grid</li>
+<li><tt class="docutils literal"><span class="pre">sigma_x</span></tt> - variance in each plane of the grid</li>
+<li><tt class="docutils literal"><span class="pre">mu_x</span></tt> - mean on the <tt class="docutils literal"><span class="pre">x</span></tt> dimension.</li>
+<li><tt class="docutils literal"><span class="pre">mu_y</span></tt> - mean on the <tt class="docutils literal"><span class="pre">y</span></tt> dimension.</li>
+<li><tt class="docutils literal"><span class="pre">mul</span></tt> - scales by this amplitude factor</li>
+</ul>
+</dd>
+<dt>Returns</dt>
+<dd>The pdf for the given distribution at the given coordinates.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pypsyexp.GaborPatch.draw_gabor">
+<tt class="descname">draw_gabor</tt><big>(</big><em>freq</em>, <em>angle</em>, <em>scale</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#GaborPatch.draw_gabor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.GaborPatch.draw_gabor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a demo for using gabor patches. Call setup_gabor to set initial
+values for the gabor patch, then draw_gabor to actually draw it to a
+surface. They are thin wrappers to the GaborPatch class.</p>
+<p>Draws the gabor patch set by &#8216;setup_gabor&#8217;</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">freq</span></tt> (int): the frequency of the gabor patch.</li>
+<li><tt class="docutils literal"><span class="pre">angle</span></tt> (int): value to determine rotation on the patch. WARNING:
+units are degrees/2.</li>
+<li><a href="#id1"><span class="problematic" id="id2">``</span></a>scale``(int) - enlarges the gabor patch by a given factor.</li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Due to a bug in <tt class="docutils literal"><span class="pre">pygame</span></tt>, <tt class="docutils literal"><span class="pre">angle</span></tt> is in units of degrees/2.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>For faster blitting it is recommended to set the grid_w and grid_h
+in &#8216;setup_gabor&#8217; to be smaller than the actual patch desired. To
+offset this, use the scale value to blow up the image.</p>
+<p class="last">Due to the nature of rotating a surface, the size of the surface the
+gabor patch changes based on the value of the rotation angle. This
+function re-centers the patch after each rotation, but it should be
+noted as it will make the area of the surface larger.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="useful-functions">
+<h2>Useful functions<a class="headerlink" href="#useful-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pypsyexp.pgColor">
+<tt class="descclassname">pypsyexp.</tt><tt class="descname">pgColor</tt><big>(</big><em>colorid</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#pgColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.pgColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a color name or RGB tuple and outputs an RGB tuple. This allows a
+function to accept any reasonable input.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><tt class="docutils literal"><span class="pre">colorid</span></tt> (str or tuple): Color name or RGB tuple.</dd>
+<dt>Returns:</dt>
+<dd>RGB tuple.</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="What is PyPsyExp?"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Todd Gureckis.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

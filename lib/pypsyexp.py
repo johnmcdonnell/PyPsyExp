@@ -13,20 +13,14 @@ Copyright (c) 2007 __Todd Gureckis__. All rights reserved.
 import os
 #import sys
 
-#import signal
 from ftplib import FTP
 import numpy as np
 import numpy.numarray as na
 import pygame
 import pygame.locals as pglc
-#from pygame.locals import *
 from random import random, randint, shuffle
-#from RandomArray import *
-#from scipy import ndimage
-#from string import *
 import struct
 import tempfile
-#from time import sleep
 import warnings as warn
 from wave import open as W
 
@@ -73,7 +67,11 @@ def pgColor( colorid ):
     # must be an RGB code...
     elif hasattr( colorid, '__contains__' ):
         if len( colorid ) == 3 or len( colorid ) == 4:
-            return colorid
+            if all( [ x >= 0 and x < 256 for x in colorid ] ):
+                return colorid
+            else:
+                msg =  "Invalid rgb key: %s" % colorid
+                self.on_exit( msg )
         else:
             msg =  "Invalid rgb key: %s" % colorid
             self.on_exit( msg )
@@ -381,12 +379,15 @@ class Experiment:
         Attempts to load an image given its filename.
         
         It has two means of determining which color will be made transparent:
+        
         1. If ``colorkey`` is not ``None``, then the color passed will be made
            transparent.  If ``colorkey`` is ``-1``, then the RGB value in the
            top left-most pixel of the image will be set as the colorkey.
+        
         2. If the filename is of the format ``*-transp-x-y.EXT``, where ``EXT``
            is the file e``x``tension, then ``x`` and ``y`` are the ``x`` and
            ``y`` coordinates of the pixel that will be made transparent.
+        
         If neither of these conditions are met, the image will not have
         transparency.
 
@@ -432,6 +433,7 @@ class Experiment:
         """
         Reads a patterncode file that must contain the following three values
         on its first three lines:
+        
          1. Condition current subject will be in.
          2. Number of conditions.
          3. Current subject number (automatically updated).
@@ -534,9 +536,11 @@ class Experiment:
         """
         Reads lines taken from a patterncode file.
         File should consists of 3 lines, as follows:
+        
          1. Condition current subject will be in 
          2. Number of conditions
          3. Current subject number (automatically updated)
+        
         Writes values to ``self.cond``, ``self.ncond``, and ``self.subj``.
         Returns the new lines to be written back to the file.
         
@@ -1399,10 +1403,10 @@ class GaborPatch:
         Draws the gabor patch set by 'setup_gabor' 
         
         Args:
-         * ``freq`` (int): the frequency of the gabor patch
+         * ``freq`` (int): the frequency of the gabor patch.
          * ``angle`` (int): value to determine rotation on the patch. WARNING:
-           units are degrees/2
-         * ``scale``(int) - enlarges the gabor patch by a given factor
+           units are degrees/2.
+         * ``scale``(int) - enlarges the gabor patch by a given factor.
         
         .. WARNING::
             Due to a bug in ``pygame``, ``angle`` is in units of degrees/2.
@@ -1448,10 +1452,18 @@ class GaborPatch:
     def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul):
         """ 
         Formula used to set the gaussion blur 
-        x,y - current position in the grid
-        sigma_x/y - variance in each plane of the grid
-        mu_x/y - mean
-        mul - scales by this amplitude factor 
+        
+        Args:
+         * ``x`` - current position in the grid
+         * ``y`` - current position in the grid
+         * ``sigma_y`` - variance in each plane of the grid
+         * ``sigma_x`` - variance in each plane of the grid
+         * ``mu_x`` - mean on the ``x`` dimension.
+         * ``mu_y`` - mean on the ``y`` dimension.
+         * ``mul`` - scales by this amplitude factor 
+        
+        Returns
+         The pdf for the given distribution at the given coordinates.
         """ 
         return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
 
