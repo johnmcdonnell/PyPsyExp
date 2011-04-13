@@ -1,0 +1,42 @@
+This is the root for the sphinx documentation for pypsyexp. 
+
+==============================
+=== Building documentation === 
+==============================
+
+- To build html documentation, at the shell type:
+
+make html # generates an html website in build/html
+
+
+- To build latex documentation, type:
+
+make latex  # generates latex files in build/latex
+cd build/latex
+make  # runs pdflatex on latex files
+
+=======================
+=== Important files ===
+=======================
+
+Site files are in ReST format in the root of source, e.g. index.rst
+
+Sphinx configuration is done in source/conf.py
+
+The html template used is in source/_templates
+
+The css template used, as well as images that are embedded in the website, can
+be found in source/_static.
+
+================
+=== See Also ===
+================
+
+The official sphinx website:
+http://sphinx.pocoo.org/
+
+The pypi guide to documenting projects with sphinx:
+http://packages.python.org/an_example_pypi_project/sphinx.html
+
+The matplotlib guide to building sphinx documentation:
+http://matplotlib.sourceforge.net/sampledoc/getting_started.html

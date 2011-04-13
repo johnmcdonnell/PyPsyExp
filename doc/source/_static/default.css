@@ -9,11 +9,13 @@ body {
     letter-spacing: -0.01em;
     line-height: 150%;
     text-align: center;
-    /*background-color: #AFC1C4; */
-    background-color: #BFD1D4;
+    background-color: #FFFFFF;
+    /*background-color: #AFC1C4;*/
+    /*background-color: #BFD1D4;*/
     color: black;
     padding: 0;
-    border: 1px solid #aaa;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
 
     margin: 0px 80px 0px 80px;
     min-width: 740px;
@@ -232,17 +234,28 @@ div.sphinxsidebar h4, div.sphinxsidebar h3 {
     margin: 1em 0 0.5em 0;
     font-size: 0.9em;
     padding: 0.1em 0 0.1em 0.5em;
-    color: white;
+    /*color: white;*/
+    color: black;
     border: 1px solid #86989B;
-    background-color: #AFC1C4;
+    /*background-color: #AFC1C4;*/
+    background-color: #FFFFFF;
 }
 
 div.sphinxsidebar ul {
     padding-left: 1.5em;
+    padding-top: 1em;
     margin-top: 7px;
     list-style: none;
     padding: 0;
     line-height: 130%;
+}
+
+div.sphinxsidebar li {
+	margin-bottom:1em;
+}
+
+div.sphinxsidebar li li {
+	margin-bottom:.1em;
 }
 
 div.sphinxsidebar ul ul {
@@ -374,10 +387,12 @@ div.admonition p.admonition-title,
 div.warning p.admonition-title {
     margin: 0;
     padding: 0.1em 0 0.1em 0.5em;
-    color: white;
+    /*color: white;*/
+    color: black;
     border-bottom: 1px solid #86989B;
     font-weight: bold;
     background-color: #AFC1C4;
+    /*background-color: #FFFFFF;*/
 }
 
 div.warning {
@@ -505,5 +520,4 @@ ul.search li div.context {
 ul.keywordmatches li.goodmatch a {
     font-weight: bold;
 }
-
 
