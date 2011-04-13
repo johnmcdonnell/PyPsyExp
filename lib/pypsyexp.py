@@ -21,6 +21,7 @@ import pygame.locals as pglc
 from random import random, randint, shuffle
 import struct
 import tempfile
+import time
 import warnings as warn
 from wave import open as W
 
@@ -122,7 +123,7 @@ class Experiment:
          * ``suppresspygame`` (bool): Try not to use any pygame UI functions.
         
         sets:
-         * ``self.options`` (dict): All keyward arguments
+         * ``self.options`` (dict): All keyword arguments
          * ``self.trial`` (dict): Signifies trial number. Initialized at 0.
          * ...and all possible keyword arguments are assigned their own ``self.`` names.
         """
@@ -260,6 +261,10 @@ class Experiment:
             except IOError:
                 warn.warn( "Error loading sounds." )
                 self.on_exit()
+    
+        # First line output will be date/time string.
+        self.output_trial( [time.strftime( "%a, %d %b %Y %H:%M:%S", time.localtime() )] )
+
     
     #------------------------------------------------------------
     # set_filename
