@@ -8,12 +8,13 @@ What is PyPsyExp?
 ====================================
 
 PyPsyExp is a user-friendly and cross-platform library for developing
-psychology experiments using Python, Pygame and NumPy. While (currently) not
-as full featured as something like `VisionEgg <http://www.visionegg.org/>`_
-or the `Psychophysics toolbox <http://psychtoolbox.org/>`_, our objective is
-to provide a clean and simple toolkit that may be exactly what you are
-looking for if you need a straightforward way to design a higher-level
-cognition experiment.
+psychology experiments using `Python <http://python.org>`_, `Pygame
+<http://pygame.org>`_ and `NumPy <http://numpy.org>`_. While (currently) not as
+full featured as something like `VisionEgg <http://www.visionegg.org/>`_ or the
+`Psychophysics toolbox <http://psychtoolbox.org/>`_, our objective is to
+provide a clean and simple toolkit that may be exactly what you are looking for
+if you need a straightforward way to design a higher-level cognition
+experiment.
 
 What does "higher-level" mean? It means you need a way to design simple, but
 interactive experiments that involve presenting information on a computer
@@ -37,8 +38,8 @@ Dependencies
 ------------
 To use pypsyexp. you'll need 
  * `Python 2.x <http://python.org>`_: A powerful scripting language summarized `here <http://xkcd.com/353/>`_
- * `NumPy <http://numpy.org>`_: A module for numerical computation in Python.
- * `PyGame <http://pygame.org>`_: A Python wrapper for `libsdl <http://libsdl.org>`_, an open source multimedia library.
+ * `NumPy <http://numpy.org/>`_: A module for numerical computation in Python.
+ * `PyGame <http://pygame.org/download.shtml>`_: A Python wrapper for `libsdl <http://libsdl.org>`_, an open source multimedia library.
 
 Download
 --------
@@ -68,7 +69,7 @@ experiment, you can simply alter this file to suit your needs.
 For more information, check out our tutorial on the Stroop experiment `here <http://smash.psych.nyu.edu/pypsyexp/stroop1.php>`_.
 
 
-Documentation:
+Documentation
 =============
 
 .. toctree::
@@ -77,7 +78,7 @@ Documentation:
     pypsyexp
     Tutorials
 
-Contact info:
+Contact info
 =============
 If you're using (or trying to use) pypsyexp and have run into bugs that need
 fixing, features you'd like to see, or if you're just having trouble doing what

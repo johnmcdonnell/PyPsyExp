@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What is PyPsyExp? &mdash; PyPsyExp v2010.04 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2010.04',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/nyu_favicon.ico"/>
+    <link rel="top" title="PyPsyExp v2010.04 documentation" href="#" />
+    <link rel="next" title="PyPsyExp Documentation" href="pypsyexp.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="#"><img src="_static/images/pypsyexptitle.png" border="0" alt="pypsyexp"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pypsyexp.html" title="PyPsyExp Documentation"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="genindex.html">index</a>|&nbsp;</li>
+	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
+        <li><a href="pypsyexp.html">documentation</a></li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What is PyPsyExp?</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quick-setup">Quick setup</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#download">Download</a></li>
+<li><a class="reference internal" href="#experiment-design">Experiment design</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation">Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#contact-info">Contact info</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pypsyexp.html"
+                        title="next chapter">PyPsyExp Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-is-pypsyexp">
+<h1>What is PyPsyExp?<a class="headerlink" href="#what-is-pypsyexp" title="Permalink to this headline">¶</a></h1>
+<p>PyPsyExp is a user-friendly and cross-platform library for developing
+psychology experiments using <a class="reference external" href="http://python.org">Python</a>, <a class="reference external" href="http://pygame.org">Pygame</a> and <a class="reference external" href="http://numpy.org">NumPy</a>. While (currently) not as
+full featured as something like <a class="reference external" href="http://www.visionegg.org/">VisionEgg</a> or the
+<a class="reference external" href="http://psychtoolbox.org/">Psychophysics toolbox</a>, our objective is to
+provide a clean and simple toolkit that may be exactly what you are looking for
+if you need a straightforward way to design a higher-level cognition
+experiment.</p>
+<p>What does &#8220;higher-level&#8221; mean? It means you need a way to design simple, but
+interactive experiments that involve presenting information on a computer
+screen (but don&#8217;t need millisecond accuracy on display refreshes) and
+measuring a participant&#8217;s responses and reaction time.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Several input methods, such as mouse buttons and text boxes.</li>
+<li>Automatic counterbalancing and data recording, across computers and even
+labs via FTP.</li>
+<li>Complete cross-platform support; the same code should run on Windows, Macs,
+and UNIX machines.</li>
+<li>Entirely free and open source. Free to extend in any way you want.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="quick-setup">
+<h1>Quick setup<a class="headerlink" href="#quick-setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>To use pypsyexp. you&#8217;ll need</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://python.org">Python 2.x</a>: A powerful scripting language summarized <a class="reference external" href="http://xkcd.com/353/">here</a></li>
+<li><a class="reference external" href="http://numpy.org/">NumPy</a>: A module for numerical computation in Python.</li>
+<li><a class="reference external" href="http://pygame.org/download.shtml">PyGame</a>: A Python wrapper for <a class="reference external" href="http://libsdl.org">libsdl</a>, an open source multimedia library.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>We keep the latest versions of our code publically accessible in a subversion
+repository, located at <a class="reference external" href="https://compcog.svn.beanstalkapp.com/pypsyexp/trunk">https://compcog.svn.beanstalkapp.com/pypsyexp/trunk</a>.</p>
+<p>If you have never used pygame before, we recommend you begin by installing
+pygame along with a simple stroop task, which serves as a demonstration of how
+pypsyexp works:</p>
+<div class="highlight-python"><pre>svn co https://compcog.svn.beanstalkapp.com/pypsyexp/trunk/demos/stroop pypsyexp_demo</pre>
+</div>
+<p>...which will check out the demo to the folder <tt class="docutils literal"><span class="pre">pypsyexp_demo</span></tt>.</p>
+<p>If you are already familiar with the library and simply want to check out the
+latest version, this will check out the library alone:</p>
+<div class="highlight-python"><pre>svn co https://compcog.svn.beanstalkapp.com/pypsyexp/trunk/lib/</pre>
+</div>
+</div>
+<div class="section" id="experiment-design">
+<h2>Experiment design<a class="headerlink" href="#experiment-design" title="Permalink to this headline">¶</a></h2>
+<p>The actual pypsyexp library is in the <tt class="docutils literal"><span class="pre">lib/</span></tt> directory. In <tt class="docutils literal"><span class="pre">stroop_new.py</span></tt>
+is an experiment file that loads in the library and runs an experiment that is
+designed to replicate the classic Stroop effect. The file follows a structure
+we would recommend, defining a class called <tt class="docutils literal"><span class="pre">StroopExperiment</span></tt> which extends
+the <tt class="docutils literal"><span class="pre">Experiment</span></tt> class defined in the <tt class="docutils literal"><span class="pre">pypsyexp</span></tt> library. To build your own
+experiment, you can simply alter this file to suit your needs.</p>
+<p>For more information, check out our tutorial on the Stroop experiment <a class="reference external" href="http://smash.psych.nyu.edu/pypsyexp/stroop1.php">here</a>.</p>
+</div>
+</div>
+<div class="section" id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pypsyexp.html">PyPsyExp Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pypsyexp.html#experiment">Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pypsyexp.html#textprompt">TextPrompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pypsyexp.html#mousebutton">MouseButton</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pypsyexp.html#gaborpatch">GaborPatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pypsyexp.html#ancillary-functions">Ancillary functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="contact-info">
+<h1>Contact info<a class="headerlink" href="#contact-info" title="Permalink to this headline">¶</a></h1>
+<p>If you&#8217;re using (or trying to use) pypsyexp and have run into bugs that need
+fixing, features you&#8217;d like to see, or if you&#8217;re just having trouble doing what
+you want, send us an email at <a class="reference external" href="mailto:XXX&#37;&#52;&#48;nyu&#46;edu">XXX<span>&#64;</span>nyu<span>&#46;</span>edu</a>.</p>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pypsyexp.html" title="PyPsyExp Documentation"
+             >next</a> |</li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="genindex.html">index</a>|&nbsp;</li>
+	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
+        <li><a href="pypsyexp.html">documentation</a></li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Todd Gureckis.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
