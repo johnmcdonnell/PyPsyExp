@@ -977,7 +977,7 @@ class Experiment:
         Returns:
             A list with reaction time and the value code for the response made.
         """
-        return self.get_response( val=val, keys=['p','q'] )
+        return self.get_response_and_rt( val=val, keys=['p','q'] )
     
     def get_response_and_rt(self, keys=['p','q'], val=None):
         """ 
@@ -1004,7 +1004,7 @@ class Experiment:
         while 1:
             self.tick()
             res = self.get_keystroke()
-            for i, r in enumerate( val ):
+            for i, r in enumerate( keys ):
                 if res == r:
                     return (pygame.time.get_ticks()-time_stamp), val[i]
     
