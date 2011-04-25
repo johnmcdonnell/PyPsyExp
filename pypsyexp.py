@@ -338,9 +338,9 @@ class Experiment:
             full_path = os.path.join( os.curdir, directory, fn )
             try:
                 image = self.load_image( full_path )
-            except IOError as e:
-                warn( "IO error on image file %s" % e.filename ) 
-                self.on_exit()
+            except IOError:
+                msg = "IO error on image file %s" % full_path
+                self.on_exit(msg)
             self.resources[fn] = image
     
     #------------------------------------------------------------
@@ -370,9 +370,9 @@ class Experiment:
             full_path = os.path.join( os.curdir, directory, fn )
             try:
                 sound = pygame.mixer.Sound( full_path )
-            except IOError as e:
-                warn( "IO error on sound file %s" % e.filename ) 
-                self.on_exit()
+            except IOError:
+                msg = "IO error on sound file %s" % full_path
+                self.on_exit(msg)
             self.resources[fn] = sound
     
     #------------------------------------------------------------
