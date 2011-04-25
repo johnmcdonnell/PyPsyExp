@@ -261,10 +261,9 @@ class Experiment:
             except IOError:
                 warn.warn( "Error loading sounds." )
                 self.on_exit()
-    
+        
         # First line output will be date/time string.
-        self.output_trial( [time.strftime( "%a, %d %b %Y %H:%M:%S", time.localtime() )] )
-
+        self.output_trial( ["#Date: ", time.strftime( "%a, %d %b %Y %H:%M:%S", time.localtime() )] )
     
     #------------------------------------------------------------
     # set_filename
@@ -334,7 +333,7 @@ class Experiment:
         if not os.path.exists( directory ):
             raise IOError( 0, 0, directory )
         files = [ fn for fn in os.listdir(os.path.join( os.curdir, directory ))
-                 if fn[0] != "." and fn!="thumbs.db" ]
+                 if fn[0] != "." and not "Thumbs.db" in fn ]
         for fn in files:
             full_path = os.path.join( os.curdir, directory, fn )
             try:
@@ -663,12 +662,11 @@ class Experiment:
     #------------------------------------------------------------
     # place_text_image
     #------------------------------------------------------------
-    def place_text_image(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
+    def place_text_image(self, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None, mysurf=None ):
         """
         Blits a Text object to the surface passed.
 
         Kwargs:
-         * ``mysurf`` (``pygame.surface``): Surface object to be blitted to.
          * ``prompt`` (str): String to be displayed
          * ``size`` (int): text size
          * ``xoff`` (int): Horizontal offset from center.
@@ -676,7 +674,9 @@ class Experiment:
          * ``txtcolor`` (str or tuple): Color of the test (name or RGB).
          * ``bgcolor`` (str or tuple): Color of the background (name or RGB).
          * ``font`` (``pygame.font``): Font object to use for text rendering.
+           Overrides other font values.
          * ``fontname`` (str): Name of font to use.
+         * ``mysurf`` (``pygame.surface``): Surface object to be blitted to.
         
         Returns:
             A pygame surface object with the text placed on it.
@@ -687,11 +687,14 @@ class Experiment:
             raise Exception, "Prompt required."
         if not mysurf:
             mysurf = self.background
-        if not fontname:
-            fontface = self.fontname
-        if not size:
-            size = self.fontsize
-        thisfont = pygame.font.SysFont( fontface, size )
+        if not font:
+            if not fontname:
+                fontname = self.fontname
+            if not size:
+                size = self.fontsize
+            thisfont = pygame.font.SysFont( fontname, size )
+        else:
+            thisfont = font
         if not txtcolor:
             txtcolor = self.fgcolor
         else:
