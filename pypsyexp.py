@@ -13,20 +13,15 @@ Copyright (c) 2007 __Todd Gureckis__. All rights reserved.
 import os
 #import sys
 
-#import signal
 from ftplib import FTP
 import numpy as np
 import numpy.numarray as na
 import pygame
 import pygame.locals as pglc
-#from pygame.locals import *
 from random import random, randint, shuffle
-#from RandomArray import *
-#from scipy import ndimage
-#from string import *
 import struct
 import tempfile
-#from time import sleep
+import time
 import warnings as warn
 from wave import open as W
 
@@ -73,7 +68,11 @@ def pgColor( colorid ):
     # must be an RGB code...
     elif hasattr( colorid, '__contains__' ):
         if len( colorid ) == 3 or len( colorid ) == 4:
-            return colorid
+            if all( [ x >= 0 and x < 256 for x in colorid ] ):
+                return colorid
+            else:
+                msg =  "Invalid rgb key: %s" % colorid
+                self.on_exit( msg )
         else:
             msg =  "Invalid rgb key: %s" % colorid
             self.on_exit( msg )
@@ -124,7 +123,7 @@ class Experiment:
          * ``suppresspygame`` (bool): Try not to use any pygame UI functions.
         
         sets:
-         * ``self.options`` (dict): All keyward arguments
+         * ``self.options`` (dict): All keyword arguments
          * ``self.trial`` (dict): Signifies trial number. Initialized at 0.
          * ...and all possible keyword arguments are assigned their own ``self.`` names.
         """
@@ -262,6 +261,9 @@ class Experiment:
             except IOError:
                 warn.warn( "Error loading sounds." )
                 self.on_exit()
+        
+        # First line output will be date/time string.
+        self.output_trial( ["#Date: ", time.strftime( "%a, %d %b %Y %H:%M:%S", time.localtime() )] )
     
     #------------------------------------------------------------
     # set_filename
@@ -331,7 +333,7 @@ class Experiment:
         if not os.path.exists( directory ):
             raise IOError( 0, 0, directory )
         files = [ fn for fn in os.listdir(os.path.join( os.curdir, directory ))
-                 if fn[0] != "." and fn!="thumbs.db" ]
+                 if fn[0] != "." and not "Thumbs.db" in fn ]
         for fn in files:
             full_path = os.path.join( os.curdir, directory, fn )
             try:
@@ -381,12 +383,15 @@ class Experiment:
         Attempts to load an image given its filename.
         
         It has two means of determining which color will be made transparent:
+        
         1. If ``colorkey`` is not ``None``, then the color passed will be made
            transparent.  If ``colorkey`` is ``-1``, then the RGB value in the
            top left-most pixel of the image will be set as the colorkey.
+        
         2. If the filename is of the format ``*-transp-x-y.EXT``, where ``EXT``
            is the file e``x``tension, then ``x`` and ``y`` are the ``x`` and
            ``y`` coordinates of the pixel that will be made transparent.
+        
         If neither of these conditions are met, the image will not have
         transparency.
 
@@ -432,6 +437,7 @@ class Experiment:
         """
         Reads a patterncode file that must contain the following three values
         on its first three lines:
+        
          1. Condition current subject will be in.
          2. Number of conditions.
          3. Current subject number (automatically updated).
@@ -534,9 +540,11 @@ class Experiment:
         """
         Reads lines taken from a patterncode file.
         File should consists of 3 lines, as follows:
+        
          1. Condition current subject will be in 
          2. Number of conditions
          3. Current subject number (automatically updated)
+        
         Writes values to ``self.cond``, ``self.ncond``, and ``self.subj``.
         Returns the new lines to be written back to the file.
         
@@ -654,12 +662,11 @@ class Experiment:
     #------------------------------------------------------------
     # place_text_image
     #------------------------------------------------------------
-    def place_text_image(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
+    def place_text_image(self, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None, mysurf=None ):
         """
         Blits a Text object to the surface passed.
 
         Kwargs:
-         * ``mysurf`` (``pygame.surface``): Surface object to be blitted to.
          * ``prompt`` (str): String to be displayed
          * ``size`` (int): text size
          * ``xoff`` (int): Horizontal offset from center.
@@ -667,7 +674,9 @@ class Experiment:
          * ``txtcolor`` (str or tuple): Color of the test (name or RGB).
          * ``bgcolor`` (str or tuple): Color of the background (name or RGB).
          * ``font`` (``pygame.font``): Font object to use for text rendering.
+           Overrides other font values.
          * ``fontname`` (str): Name of font to use.
+         * ``mysurf`` (``pygame.surface``): Surface object to be blitted to.
         
         Returns:
             A pygame surface object with the text placed on it.
@@ -678,11 +687,14 @@ class Experiment:
             raise Exception, "Prompt required."
         if not mysurf:
             mysurf = self.background
-        if not fontname:
-            fontface = self.fontname
-        if not size:
-            size = self.fontsize
-        thisfont = pygame.font.SysFont( fontface, size )
+        if not font:
+            if not fontname:
+                fontname = self.fontname
+            if not size:
+                size = self.fontsize
+            thisfont = pygame.font.SysFont( fontname, size )
+        else:
+            thisfont = font
         if not txtcolor:
             txtcolor = self.fgcolor
         else:
@@ -965,7 +977,7 @@ class Experiment:
         Returns:
             A list with reaction time and the value code for the response made.
         """
-        return self.get_response( val=val, keys=['p','q'] )
+        return self.get_response_and_rt( val=val, keys=['p','q'] )
     
     def get_response_and_rt(self, keys=['p','q'], val=None):
         """ 
@@ -992,7 +1004,7 @@ class Experiment:
         while 1:
             self.tick()
             res = self.get_keystroke()
-            for i, r in enumerate( val ):
+            for i, r in enumerate( keys ):
                 if res == r:
                     return (pygame.time.get_ticks()-time_stamp), val[i]
     
@@ -1369,14 +1381,18 @@ class MouseButton:
 # Creates a GaborPatch object, which is drawn by calling draw_gabor.
 #------------------------------------------------------------
 class GaborPatch:
+    """
+    The ``GaborPatch`` object initializes the gabor patch when it is called. It
+    can then be drawn by callind ``draw_gabor``.
+    """
     def __init__(self, grid_w=10, grid_h=10, windowsd=1):
         """ 
-        Sets up initial values for a gabor patch and its gaussian blur.
+        Sets up initial values for a gabor patch.
         
         Arguments:
-         * grid_w (int): width
-         * grid_h (int): height 
-         * windowsd (float): standard deviation  
+         * ``grid_w`` (int): width
+         * ``grid_h`` (int): height 
+         * ``windowsd`` (float): standard deviation  
         """
         # TODO: Gabors should also in principle have equal luminance.
         self.w = grid_w
@@ -1392,17 +1408,13 @@ class GaborPatch:
     #------------------------------------------------------------
     def draw_gabor(self, freq, angle, scale):
         """ 
-        This is a demo for using gabor patches. Call setup_gabor to set initial
-        values for the gabor patch, then draw_gabor to actually draw it to a
-        surface. They are thin wrappers to the GaborPatch class.
-        
-        Draws the gabor patch set by 'setup_gabor' 
+        Draws the gabor patch.
         
         Args:
-         * ``freq`` (int): the frequency of the gabor patch
+         * ``freq`` (int): the frequency of the gabor patch.
          * ``angle`` (int): value to determine rotation on the patch. WARNING:
-           units are degrees/2
-         * ``scale``(int) - enlarges the gabor patch by a given factor
+           units are degrees/2.
+         * ``scale`` (int) - enlarges the gabor patch by a given factor.
         
         .. WARNING::
             Due to a bug in ``pygame``, ``angle`` is in units of degrees/2.
@@ -1447,13 +1459,24 @@ class GaborPatch:
     #------------------------------------------------------------   
     def bivariate_normpdf(self, x, y, sigma_x, sigma_y, mu_x, mu_y, mul):
         """ 
-        Formula used to set the gaussion blur 
-        x,y - current position in the grid
-        sigma_x/y - variance in each plane of the grid
-        mu_x/y - mean
-        mul - scales by this amplitude factor 
+        Formula used to set the gaussion blur. Covariance is fixed at 0.
+
+        .. math::
+            \mathrm{pdf}(\mathcal{N}(\mu, \Sigma), \mathbf{x}) = (2\pi)^{-k/2} |\Sigma|^{- 1/2} e^{-(1/2)(\mathbf{x}-\mu)'\Sigma^{-1}(\mathbf{x}-\mu)}
+        
+        Args:
+         * ``x`` - current position in the grid
+         * ``y`` - current position in the grid
+         * ``sigma_y`` - variance in each plane of the grid
+         * ``sigma_x`` - variance in each plane of the grid
+         * ``mu_x`` - mean on the ``x`` dimension.
+         * ``mu_y`` - mean on the ``y`` dimension.
+         * ``mul`` - scales by this amplitude factor 
+        
+        Returns:
+         The pdf for the given distribution at the given coordinates.
         """ 
-        return mul / (2.0*pi*sigma_x*sigma_y) * exp(-1.0/2.0*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
+        return mul / (2.0*pi*sigma_x*sigma_y) * exp(-.5*((x-mu_x)**2.0/sigma_x**2.0 + (y-mu_y)**2/sigma_y**2.0)) 
 
 class TextPrompt:
     """
