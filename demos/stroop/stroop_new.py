@@ -11,7 +11,7 @@
 
 import os, sys
 import math
-from random import random, randint
+from random import random, randrange, choice
 import pygame
 from pygame.locals import *
 import tempfile
@@ -53,59 +53,6 @@ class StroopExperiment(Experiment):
         ## below keeps it in a loop until the correct button is pressed
         rt, val = self.get_response_and_rt( keys=['n'] )
     
-    #------------------------------------------------------------
-    # place_text_image_rotate
-    #------------------------------------------------------------
-    def place_text_image_rotate(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
-        if not mysurf:
-            mysurf = self.background
-        text = self.get_text_image(font=font, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
-        text = pygame.transform.rotate(text, 180)
-        textpos = text.get_rect()
-        textpos.centerx = mysurf.get_rect().centerx + xoff
-        textpos.centery = mysurf.get_rect().centery + yoff
-        mysurf.blit(text, textpos)
-    
-    ###########################################################
-    # do_stroop_trial
-    ###########################################################
-    def do_stroop_trial(self, word, wordcolor, correct_resp, rotate=False):
-        # clear the screen
-        background = self.clear_screen(black)
-        
-        # show word
-        if rotate==False:
-            self.place_text_image(prompt=word, txtcolor=wordcolor)
-        else:
-            self.place_text_image_rotate(prompt=word, txtcolor=wordcolor)
-        self.place_text_image( prompt="Press 'r' for red,   Press 'g' for green,  Press 'y' for yellow,   Press 'b' for blue", size=26, xoff=0, yoff=350)
-        self.update_display()
-        
-        rt, res = self.get_response_and_rt( ['r', 'g', 'y', 'b'] )
-        
-        if res == correct_resp:
-            hit = True
-        else:
-            hit = False
-        
-        # display feedback
-        background = self.clear_screen(black)
-        if hit==False:
-            self.place_text_image(prompt="Sorry that was incorrect!")
-        else:
-            self.place_text_image(prompt="Great!  That was correct!")
-        
-        # display feedback
-        self.update_display()
-        self.escapable_sleep(pause=1000)
-        
-        self.clear_screen()
-        self.update_display()
-        self.escapable_sleep(800)
-        
-        self.current_trial += 1
-        return [res,rt,hit]
-    
     ###########################################################
     # show_thanks
     ###########################################################
@@ -125,161 +72,156 @@ class StroopExperiment(Experiment):
         self.get_response_and_rt(keys=["space"])
     
     ###########################################################
+    # place_text_image_invert
+    ###########################################################
+    def place_text_image_invert(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
+        """
+        Identical to ``pypsyexp.place_text_image``, except it inverts the text.
+        """
+        if not mysurf:
+            mysurf = self.background
+        text = self.get_text_image(font=font, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
+        text = pygame.transform.rotate(text, 180)
+        textpos = text.get_rect()
+        textpos.centerx = mysurf.get_rect().centerx + xoff
+        textpos.centery = mysurf.get_rect().centery + yoff
+        mysurf.blit(text, textpos)
+    
+    ###########################################################
+    # do_stroop_trial
+    ###########################################################
+    def do_stroop_trial(self, word, wordcolor, correct_resp, rotate="normal"):
+        # clear the screen
+        background = self.clear_screen(black)
+        
+        # show word
+        if rotate=="normal":
+            self.place_text_image(prompt=word, txtcolor=wordcolor)
+        elif rotate=="inverted":
+            self.place_text_image_invert(prompt=word, txtcolor=wordcolor)
+        else:
+            msg = "ERROR: Invalid value for rotate: %s" % rotate
+            self.on_exit( msg )
+        self.place_text_image( prompt="Press 'r' for red,   Press 'g' for green,  Press 'y' for yellow,   Press 'b' for blue", size=26, xoff=0, yoff=350)
+        self.update_display()
+        
+        # wait for response
+        rt, res = self.get_response_and_rt( ['r', 'g', 'y', 'b'] )
+        
+        # decide if it was correct
+        if res == correct_resp:
+            hit = True
+        else:
+            hit = False
+        
+        # display feedback for 1000ms
+        background = self.clear_screen(black)
+        if hit==False:
+            self.place_text_image(prompt="Sorry that was incorrect!")
+        else:
+            self.place_text_image(prompt="Great!  That was correct!")
+        self.update_display()
+        self.escapable_sleep(pause=1000)
+        
+        # Enforce an inter-trial interval of 800ms
+        self.clear_screen()
+        self.update_display()
+        self.escapable_sleep(800)
+        
+        self.current_trial += 1
+        return [res,rt,hit]
+    
+    ###########################################################
+    # do_trial_block
+    ###########################################################
+    def do_trial_block(self, nonwords, words, colors, resp, respondto, n, allow_inverted=False):
+        for i in range(n):
+            if allow_inverted:
+                orientation = choice( ["normal", "inverted"] )
+            else:
+                orientation = "normal"
+            
+            if respondto=="color":
+                trialtype = choice( ["congruent", "incongruent",
+                                     "control"] )
+            else:
+                trialtype = choice( ["congruent", "incongruent"] )
+            
+            if trialtype == "control":
+                ri = randrange(len(nonwords))
+                rc = randrange(len(colors))
+                thisword = nonwords[ri]
+                thiscolor = colors[rc]
+                correct_resp = resp[rc]
+            elif trialtype == "congruent":
+                ri = randrange(len(words))
+                thisword = words[ri]
+                thiscolor = colors[ri]
+                correct_resp = resp[ri]
+            elif trialtype == "incongruent":
+                ri=randrange(len(words))
+                rc=randrange(len(words))
+                while ri==rc:
+                    rc=randrange(len(words))
+                thisword = words[ri]
+                thiscolor = colors[rc]
+                correct_resp = resp[rc]
+            else:
+                msg = "ERROR: %s is not a valid trialtype." \
+                        % trialtype
+                self.on_exit(msg)
+            
+            res, rt, hit = self.do_stroop_trial(thisword, thiscolor,
+                                                correct_resp,
+                                                rotate=orientation)
+            # Make a list of trial information to be output:
+            trialinfo = [self.subj, self.cond, self.current_trial, thisword,
+                         respondto, trialtype, orientation, correct_resp,
+                         res, hit, rt]
+            self.output_trial( trialinfo )
+    
+    ###########################################################
     # do_experiment
     ###########################################################
     def do_experiment(self):
         self.current_trial =0
         
-        # CODES FOR TRIALS
-        # what are you responding to?
-        WORD = 1
-        COLOR = 2
-        
-        # what type of trial is it?
-        CONTROL = 1
-        CONGRUENT = 2
-        INCONGRUENT = 3
-        
-        # is the word upside down?
-        NORMAL = False
-        INVERTED = True       
-        
         # show initial instructions
         self.show_instructions('maininstruction.jpg')
         
-        # Practice parameters
-        nonwords=["KWLA","EXTM","BUTTER","FAST"]
+        # Basic parameters
         words=["BLUE","GREEN","RED","YELLOW"]
         colors=["blue","green","red","yellow"]
         resp = ['b','g','r','y']
         
-        # 5 practice trials responding to word
-        self.show_instructions('practiceword.jpg')
+        # Practice nonwords
+        nonwords=["KWLA","EXTM","BUTTER","FAST"]
         
-        respondto = WORD
-        orientation = NORMAL
-        for i in range(5):
-            needle = random()
-            if needle<.5:
-                trialtype = CONGRUENT
-                ri=randint(0,len(words)-1)
-                myword = words[ri]
-                mycolor = colors[ri]
-                correct_resp = resp[ri]
-            else:
-                trialtype = INCONGRUENT
-                ri=randint(0,len(words)-1)
-                rc=randint(0,len(words)-1)
-                while ri==rc:
-                    rc=randint(0,len(words)-1)
-                myword = words[ri]
-                mycolor = colors[rc]
-                correct_resp = resp[ri]
-            # do trial
-            res, rt, hit =self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
+        # 5 practice trials responding to word
+        respondto = "word"
+        self.show_instructions('practiceword.jpg')
+        self.do_trial_block( nonwords, words, colors, resp, respondto, 5, allow_inverted=False )
         
         # 5 practice trials responding to color
+        respondto = "color"
         self.show_instructions('practicecolor.jpg')
-        
-        needle = random()
-        respondto = COLOR
-        for i in range(5):
-            needle = random()
-            if needle<(1./3.):
-                trialtype = CONTROL
-                ri=randint(0,len(nonwords)-1)
-                rc=randint(0,len(colors)-1)
-                myword = nonwords[ri]
-                mycolor = colors[rc]
-                correct_resp = resp[rc]
-            elif (1./3.)<=needle<=(2./3.):
-                trialtype = CONGRUENT
-                ri=randint(0,len(words)-1)
-                myword = words[ri]
-                mycolor = colors[ri]
-                correct_resp = resp[ri]
-            else:
-                trialtype = INCONGRUENT
-                ri=randint(0,len(words)-1)
-                rc=randint(0,len(words)-1)
-                while ri==rc:
-                    rc=randint(0,len(words)-1)
-                myword = words[ri]
-                mycolor = colors[rc]
-                correct_resp = resp[rc]
-            # do trial
-            [res,rt,hit]=self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
+        self.do_trial_block( nonwords, words, colors, resp, respondto, 5, allow_inverted=False )
         
         # The real experiment
         self.show_instructions('begin.jpg')
         
+        # Different nonwords for the actual experiment:
         nonwords=["CAR","HUNT","JXJT","PLXE"]
-        words=["BLUE","GREEN","RED","YELLOW"]
-        colors=["blue","green","red","yellow"]
-        resp = ['b','g','r','y']
         
-        
-        blockorder=[COLOR,COLOR,COLOR,WORD,WORD]
+        blockorder=["color","color","color","word","word"]
         shuffle(blockorder)
         for respondto in blockorder:
-            if respondto == COLOR:
+            if respondto == "color":
                 self.show_instructions('respondtocolor.jpg')
             else:
                 self.show_instructions('respondtoword.jpg')
         
-            # congruent
-            for i in range(100):
-                # rotate
-                if random()<=.5:
-                    orientation = NORMAL
-                else:
-                    orientation = INVERTED
-                
-                needle = random()
-                if respondto==COLOR:
-                    if needle<(1./3.):
-                        trialtype = CONTROL
-                        ri=randint(0,len(nonwords)-1)
-                        rc=randint(0,len(colors)-1)
-                        myword = nonwords[ri]
-                        mycolor = colors[rc]
-                        correct_resp = resp[rc]
-                    elif (1./3.)<=needle<=(2./3.):
-                        trialtype = CONGRUENT
-                        ri=randint(0,len(words)-1)
-                        myword = words[ri]
-                        mycolor = colors[ri]
-                        correct_resp = resp[ri]
-                    else:
-                        trialtype = INCONGRUENT
-                        ri=randint(0,len(words)-1)
-                        rc=randint(0,len(words)-1)
-                        while ri==rc:
-                            rc=randint(0,len(words)-1)
-                        myword = words[ri]
-                        mycolor = colors[rc]
-                        correct_resp = resp[rc]
-                else: # respond to word
-                    if needle<.5:
-                        trialtype = CONGRUENT
-                        ri=randint(0,len(words)-1)
-                        myword = words[ri]
-                        mycolor = colors[ri]
-                        correct_resp = resp[ri]
-                    else:
-                        trialtype = INCONGRUENT
-                        ri=randint(0,len(words)-1)
-                        rc=randint(0,len(words)-1)
-                        while ri==rc:
-                            rc=randint(0,len(words)-1)
-                        myword = words[ri]
-                        mycolor = colors[rc]
-                        correct_resp = resp[ri]
-                
-                # do trial
-                [res,rt,hit]=self.do_stroop_trial(myword, mycolor, correct_resp, rotate=orientation)
-                self.output_trial([self.subj, self.cond, self.current_trial, myword, respondto, trialtype, orientation, correct_resp, res, hit, rt])
-        
+            self.do_trial_block( nonwords, words, colors, resp, respondto, 100, allow_inverted=True )
         
         self.show_thanks()
         
@@ -305,7 +247,6 @@ def main():
         screenres = FULLSCREENRES
     experiment = StroopExperiment(nofullscreen, screenres, experimentname, **options)
     experiment.do_experiment()
-    
 
 ###########################################################
 # let's start

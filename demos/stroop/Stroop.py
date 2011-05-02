@@ -140,8 +140,6 @@ class StroopExperiment(Experiment):
         self.current_trial += 1
         return [res,rt,hit]
     
-           
-        
     ###########################################################
     # show_thanks
     ###########################################################
@@ -166,7 +164,6 @@ class StroopExperiment(Experiment):
         
         while 1:
             res = self.get_response()
-    
     
     ###########################################################
     # do_experiment
@@ -268,7 +265,7 @@ class StroopExperiment(Experiment):
                 self.show_instructions('respondtocolor.jpg')
             else:
                 self.show_instructions('respondtoword.jpg')
-        
+       
             # congruent
             for i in range(100):
                 # rotate
@@ -324,7 +321,6 @@ class StroopExperiment(Experiment):
         
         
         self.show_thanks()
-        
 
 ###########################################################
 # main
