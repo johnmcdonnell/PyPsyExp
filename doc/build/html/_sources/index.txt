@@ -38,7 +38,7 @@ Dependencies
 ------------
 To use pypsyexp. you'll need 
  * `Python 2.x <http://python.org>`_: A powerful scripting language summarized `here <http://xkcd.com/353/>`_
- * `NumPy <http://numpy.org/>`_: A module for numerical computation in Python.
+ * `NumPy <http://numpy.org/>`_: A package for numerical computation in Python.
  * `PyGame <http://pygame.org/download.shtml>`_: A Python wrapper for `libsdl <http://libsdl.org>`_, an open source multimedia library.
 
 Download
@@ -80,7 +80,7 @@ Documentation
 
 Contact info
 =============
-If you're using (or trying to use) pypsyexp and have run into bugs that need
+If you're using (or trying to use) PyPsyExp and have run into bugs that need
 fixing, features you'd like to see, or if you're just having trouble doing what
 you want, send us an email at XXX@nyu.edu.
 

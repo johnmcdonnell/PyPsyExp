@@ -525,20 +525,21 @@ by a space.</p>
 
 <dl class="method">
 <dt id="pypsyexp.Experiment.place_text_image">
-<tt class="descname">place_text_image</tt><big>(</big><em>mysurf=None</em>, <em>prompt=''</em>, <em>size=None</em>, <em>xoff=0</em>, <em>yoff=0</em>, <em>txtcolor=None</em>, <em>bgcolor=None</em>, <em>font=None</em>, <em>fontname=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.place_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.place_text_image" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">place_text_image</tt><big>(</big><em>prompt=''</em>, <em>size=None</em>, <em>xoff=0</em>, <em>yoff=0</em>, <em>txtcolor=None</em>, <em>bgcolor=None</em>, <em>font=None</em>, <em>fontname=None</em>, <em>mysurf=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.place_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.place_text_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blits a Text object to the surface passed.</p>
 <dl class="docutils">
 <dt>Kwargs:</dt>
 <dd><ul class="first last simple">
-<li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface object to be blitted to.</li>
 <li><tt class="docutils literal"><span class="pre">prompt</span></tt> (str): String to be displayed</li>
 <li><tt class="docutils literal"><span class="pre">size</span></tt> (int): text size</li>
 <li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
 <li><tt class="docutils literal"><span class="pre">yoff</span></tt> (int): Vertical offset from center.</li>
 <li><tt class="docutils literal"><span class="pre">txtcolor</span></tt> (str or tuple): Color of the test (name or RGB).</li>
 <li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Color of the background (name or RGB).</li>
-<li><tt class="docutils literal"><span class="pre">font</span></tt> (<tt class="docutils literal"><span class="pre">pygame.font</span></tt>): Font object to use for text rendering.</li>
+<li><tt class="docutils literal"><span class="pre">font</span></tt> (<tt class="docutils literal"><span class="pre">pygame.font</span></tt>): Font object to use for text rendering.
+Overrides other font values.</li>
 <li><tt class="docutils literal"><span class="pre">fontname</span></tt> (str): Name of font to use.</li>
+<li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface object to be blitted to.</li>
 </ul>
 </dd>
 <dt>Returns:</dt>
