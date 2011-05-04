@@ -29,6 +29,24 @@
     <link rel="prev" title="What is PyPsyExp?" href="index.html" /> 
   </head>
   <body>
+	<!-- It's a little messy that this is here, but I've seen worse. -->
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.company = "pypsyexp";
+  feedback_widget_options.placement = "left";
+  feedback_widget_options.color = "#222";
+  feedback_widget_options.style = "question";
+  
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/images/pypsyexptitle.png" border="0" alt="pypsyexp"/></a>
@@ -50,6 +68,7 @@
         <li><a href="genindex.html">index</a>|&nbsp;</li>
 	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
         <li><a href="#">documentation</a></li>
+
  
       </ul>
     </div>
@@ -166,7 +185,7 @@ to <tt class="docutils literal"><span class="pre">data</span></tt></li>
 <dt id="pypsyexp.Experiment.check_for_exit">
 <tt class="descname">check_for_exit</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.check_for_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.check_for_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks for the exit sequence: left shift plus ~.
-Overload this function to use a different exit keystroke.</p>
+Override this function to use a different exit keystroke.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1018,6 +1037,7 @@ returns an rgb tuple corresponding to the name.</dd>
         <li><a href="genindex.html">index</a>|&nbsp;</li>
 	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
         <li><a href="#">documentation</a></li>
+
  
       </ul>
     </div>

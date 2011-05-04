@@ -28,6 +28,24 @@
     <link rel="next" title="PyPsyExp Documentation" href="pypsyexp.html" /> 
   </head>
   <body>
+	<!-- It's a little messy that this is here, but I've seen worse. -->
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.company = "pypsyexp";
+  feedback_widget_options.placement = "left";
+  feedback_widget_options.color = "#222";
+  feedback_widget_options.style = "question";
+  
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
 <a href="#"><img src="_static/images/pypsyexptitle.png" border="0" alt="pypsyexp"/></a>
@@ -46,6 +64,7 @@
         <li><a href="genindex.html">index</a>|&nbsp;</li>
 	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
         <li><a href="pypsyexp.html">documentation</a></li>
+
  
       </ul>
     </div>
@@ -68,7 +87,6 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#contact-info">Contact info</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
   <h4>Next topic</h4>
@@ -109,7 +127,7 @@ full featured as something like <a class="reference external" href="http://www.v
 provide a clean and simple toolkit that may be exactly what you are looking for
 if you need a straightforward way to design a higher-level cognition
 experiment.</p>
-<p>What does &#8220;higher-level&#8221; mean? It means you need a way to design simple, but
+<p>What does &#8220;higher-level&#8221; mean? It means you need a way to design simple
 interactive experiments that involve presenting information on a computer
 screen (but don&#8217;t need millisecond accuracy on display refreshes) and
 measuring a participant&#8217;s responses and reaction time.</p>
@@ -136,7 +154,8 @@ and UNIX machines.</li>
 <dd><ul class="first last simple">
 <li><a class="reference external" href="http://python.org">Python 2.x</a>: A powerful scripting language summarized <a class="reference external" href="http://xkcd.com/353/">here</a></li>
 <li><a class="reference external" href="http://numpy.org/">NumPy</a>: A package for numerical computation in Python.</li>
-<li><a class="reference external" href="http://pygame.org/download.shtml">PyGame</a>: A Python wrapper for <a class="reference external" href="http://libsdl.org">libsdl</a>, an open source multimedia library.</li>
+<li><a class="reference external" href="http://pygame.org/download.shtml">PyGame</a>: A Python wrapper for <a class="reference external" href="http://libsdl.org">libsdl</a>, an open source multimedia library. It has its own
+dependencies. Instructions for getting it working on a Macintosh can be found <a class="reference external" href="http://nyuccl.org/labwiki/PyGameSetup">here</a>.</li>
 </ul>
 </dd>
 </dl>
@@ -169,6 +188,7 @@ experiment, you can simply alter this file to suit your needs.</p>
 </div>
 <div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+<p>Documentation for the classes and functions in pygame can be found here:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pypsyexp.html">PyPsyExp Documentation</a><ul>
@@ -185,17 +205,9 @@ experiment, you can simply alter this file to suit your needs.</p>
 </div>
 <div class="section" id="contact-info">
 <h1>Contact info<a class="headerlink" href="#contact-info" title="Permalink to this headline">¶</a></h1>
-<p>If you&#8217;re using (or trying to use) PyPsyExp and have run into bugs that need
-fixing, features you&#8217;d like to see, or if you&#8217;re just having trouble doing what
-you want, send us an email at <a class="reference external" href="mailto:XXX&#37;&#52;&#48;nyu&#46;edu">XXX<span>&#64;</span>nyu<span>&#46;</span>edu</a>.</p>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
+<p>We now have an online community for discussing bugs, issues, and features of
+the pypsyexp system! Come join the discussion at <a class="reference external" href="http://getsatisfaction.com/pypsyexp">get satisfaction</a>.</p>
+<a class="reference external image-reference" href="http://getsatisfaction.com/pypsyexp"><img alt="Badge_logo_small" class="align-right" src="http://getsatisfaction.com/images/badges/badge_logo_small.png" /></a>
 </div>
 
 
@@ -217,6 +229,7 @@ you want, send us an email at <a class="reference external" href="mailto:XXX&#37
         <li><a href="genindex.html">index</a>|&nbsp;</li>
 	<!-- <li><a href="search.html">search</a>|&nbsp;</li> -->
         <li><a href="pypsyexp.html">documentation</a></li>
+
  
       </ul>
     </div>

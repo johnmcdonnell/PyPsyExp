@@ -16,7 +16,7 @@ provide a clean and simple toolkit that may be exactly what you are looking for
 if you need a straightforward way to design a higher-level cognition
 experiment.
 
-What does "higher-level" mean? It means you need a way to design simple, but
+What does "higher-level" mean? It means you need a way to design simple
 interactive experiments that involve presenting information on a computer
 screen (but don't need millisecond accuracy on display refreshes) and
 measuring a participant's responses and reaction time. 
@@ -39,7 +39,9 @@ Dependencies
 To use pypsyexp. you'll need 
  * `Python 2.x <http://python.org>`_: A powerful scripting language summarized `here <http://xkcd.com/353/>`_
  * `NumPy <http://numpy.org/>`_: A package for numerical computation in Python.
- * `PyGame <http://pygame.org/download.shtml>`_: A Python wrapper for `libsdl <http://libsdl.org>`_, an open source multimedia library.
+ * `PyGame <http://pygame.org/download.shtml>`_: A Python wrapper for `libsdl
+   <http://libsdl.org>`_, an open source multimedia library. It has its own
+   dependencies. Instructions for getting it working on a Macintosh can be found `here <http://nyuccl.org/labwiki/PyGameSetup>`_.
 
 Download
 --------
@@ -71,6 +73,7 @@ For more information, check out our tutorial on the Stroop experiment `here <htt
 
 Documentation
 =============
+Documentation for the classes and functions in pygame can be found here:
 
 .. toctree::
     :maxdepth: 2
@@ -80,15 +83,21 @@ Documentation
 
 Contact info
 =============
-If you're using (or trying to use) PyPsyExp and have run into bugs that need
-fixing, features you'd like to see, or if you're just having trouble doing what
-you want, send us an email at XXX@nyu.edu.
+We now have an online community for discussing bugs, issues, and features of
+the pypsyexp system! Come join the discussion at `get satisfaction
+<http://getsatisfaction.com/pypsyexp>`_.
 
-Indices and tables
-==================
+.. image:: http://getsatisfaction.com/images/badges/badge_logo_small.png
+    :target: http://getsatisfaction.com/pypsyexp
+    :alt: Badge_logo_small
+    :align: right
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
+.. 
+        Indices and tables
+        ==================
+        * :ref:`genindex`
+        * :ref:`modindex`
+        * :ref:`search`
 
 .. vi: set sw=4 ts=4
