@@ -128,7 +128,7 @@
 <em class="property">class </em><tt class="descclassname">pypsyexp.</tt><tt class="descname">Experiment</tt><big>(</big><em>nofullscreen</em>, <em>screenres</em>, <em>experimentname</em>, <em>**useroptions</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>The experiment class is a general purpose class.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last">
 <li><dl class="first docutils">
 <dt>nofullscreen (bool):</dt>
@@ -148,7 +148,7 @@ of the new window.</p>
 </li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">experimentversion</span></tt> (str): The version name for the experiment.</li>
 <li><tt class="docutils literal"><span class="pre">fontname</span></tt> (str): Name of default font.</li>
@@ -194,7 +194,7 @@ Override this function to use a different exit keystroke.</p>
 <dd><p>Creates a Surface with the dimensions of the display screen, fills
 it with a given color, and returns the Surface.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">color</span></tt> (str of tuple): Color to draw on screen (name or rgb).
 Defaults to <tt class="docutils literal"><span class="pre">self.bgcolor</span></tt>.</li>
@@ -213,7 +213,7 @@ values for the gabor patch, then draw_gabor to actually draw it to a
 surface. They are thin wrappers to the GaborPatch class.</p>
 <p>Draws the gabor patch set by &#8216;setup_gabor&#8217;</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">freq</span></tt> (int): the frequency of the gabor patch</li>
 <li><tt class="docutils literal"><span class="pre">angle</span></tt> (int): value to determine rotation on the patch. WARNING:
@@ -245,7 +245,7 @@ noted as it will make the area of the surface larger.</p>
 with a mouse. They can draw by clicking and dragging the mouse.
 Pressing the break_key exits the drawing environment.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li>background (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): The surface to draw to. Defaults to
 <tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
@@ -265,7 +265,7 @@ terminates drawing.</li>
 <dd><p>Draws a square of the size and coordinates requested to the background,
 and returns the result.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to draw to. Defaults to
 <tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
@@ -288,7 +288,7 @@ Otherwise it is not filled.</li>
 <dd><p>Pauses the program for &#8216;pause&#8217;-number of milliseconds. Can be exited
 via the default keystroke in``check_for_exit``.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">pause</span></tt> (int): (in milliseconds) Amount of time to sleep for.</li>
 <li><tt class="docutils literal"><span class="pre">esckey</span></tt> (int; from <tt class="docutils literal"><span class="pre">pygame.locals</span></tt>): A key that, if pressed,
@@ -314,7 +314,7 @@ on its first three lines:</p>
 are automatically updated and written back into the file for subsequent
 runnings.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): Path to the patterncode file. Defaults to
 <tt class="docutils literal"><span class="pre">patterncode.txt</span></tt></li>
@@ -333,7 +333,7 @@ from a remote ftp client in order to set up participant numbers and
 conditions. The host, username, and password can be set during the
 initialization of the <tt class="docutils literal"><span class="pre">Experiment</span></tt> object.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">host</span></tt> (str): web address of file hosting site</li>
 <li><tt class="docutils literal"><span class="pre">username</span></tt> (str): account name on the host site</li>
@@ -352,7 +352,7 @@ initialization of the <tt class="docutils literal"><span class="pre">Experiment<
 <tt class="descname">get_keystroke</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_keystroke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_keystroke" title="Permalink to this definition">¶</a></dt>
 <dd><p>Waits for a key to be pressed, then Returns the key mapping for a
 single pressed letter, ignoring modifier keys. Actual key mappings are
-found in libSDL source, in: <tt class="docutils literal"><span class="pre">$SDLROOT/src/SDL_keyboard.c</span></tt>.</p>
+found in libSDL source, in: <tt class="docutils literal"><span class="pre">$SDLROOT/src/events/SDL_keyboard.c</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -369,13 +369,13 @@ found in libSDL source, in: <tt class="docutils literal"><span class="pre">$SDLR
 function to the end of the function (reaction time; rt) and the coded
 version of the response (given in &#8216;val&#8217;).</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">keys</span></tt> (list or tuple of strings) where the keys are the names of
 the keys that will be pressed. Defaults to <tt class="docutils literal"><span class="pre">[q,</span> <span class="pre">p]</span></tt>. Keypad
 numbers == keyboard numbers (although this could change) For a full
 list of valid key names, see the libSDL source, under
-<tt class="docutils literal"><span class="pre">$SDLroot/src/SDL_keyboard.c</span></tt>.</li>
+<tt class="docutils literal"><span class="pre">$SDLroot/src/events/SDL_keyboard.c</span></tt>.</li>
 <li><tt class="docutils literal"><span class="pre">val</span></tt> (list or tuple) with coded values, e.g. <tt class="docutils literal"><span class="pre">['Left',</span>
 <span class="pre">'Right']</span></tt> or <tt class="docutils literal"><span class="pre">(0,</span> <span class="pre">1)</span></tt>. Defaults to be the same as <tt class="docutils literal"><span class="pre">keys</span></tt>.</li>
 </ul>
@@ -392,7 +392,7 @@ list of valid key names, see the libSDL source, under
 it took from the call to the function to the end of the function
 (reaction time; rt) and the response made (res).</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">val</span></tt> (list or tuple) with coded values, e.g. <tt class="docutils literal"><span class="pre">['Left',</span>
 <span class="pre">'Right']</span></tt> or <tt class="docutils literal"><span class="pre">(0,</span> <span class="pre">1)</span></tt></li>
@@ -408,7 +408,7 @@ it took from the call to the function to the end of the function
 <tt class="descname">get_text_image</tt><big>(</big><em>font=None</em>, <em>prompt=''</em>, <em>txtcolor=None</em>, <em>bgcolor=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.get_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.get_text_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Surface with anti-aliased text written on it, and returns it.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">font</span></tt> (<tt class="docutils literal"><span class="pre">pygame.font</span></tt>): The font to use for the text.</li>
 <li><tt class="docutils literal"><span class="pre">prompt</span></tt> (str): String to be displayed</li>
@@ -431,7 +431,7 @@ files (in the case of Macs) and UNIX system files (starting with <tt class="docu
 All images are placed in a list called <tt class="docutils literal"><span class="pre">self.resources</span></tt>.  All images
 must be referenced by name, e.g.  <tt class="docutils literal"><span class="pre">self.resources['image1.gif']</span></tt>.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">directory</span></tt> (str): Path to the folder containing images.</li>
 </ul>
@@ -447,7 +447,7 @@ must be referenced by name, e.g.  <tt class="docutils literal"><span class="pre"
 <dd><p>Loads images and sounds by calling <tt class="docutils literal"><span class="pre">load_all_images</span></tt> and
 <tt class="docutils literal"><span class="pre">load_all_sounds</span></tt>.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">img_directory</span></tt> (str): Path to the folder containing
 images.</li>
@@ -467,7 +467,7 @@ of Macs) and UNIX system files (starting with <tt class="docutils literal"><span
 placed in a list called <tt class="docutils literal"><span class="pre">self.resources</span></tt>. All sounds must be
 referenced by name, i.e.  <tt class="docutils literal"><span class="pre">self.resources['sound1.wav'].play()</span></tt></p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">directory</span></tt> (str): Path to the folder containing images.</li>
 </ul>
@@ -493,12 +493,12 @@ is the file e``x``tension, then <tt class="docutils literal"><span class="pre">x
 <p>If neither of these conditions are met, the image will not have
 transparency.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">filename</span></tt> (str): path to image file.</li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">colorkey</span></tt> (tuple of ints): path to image file.</li>
 </ul>
@@ -515,7 +515,7 @@ transparency.</p>
 <tt class="descname">on_exit</tt><big>(</big><em>msg=''</em>, <em>exception=&lt;type 'exceptions.SystemExit'&gt;</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.on_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.on_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears all data that remains on queue and closes <tt class="docutils literal"><span class="pre">self.datafile</span></tt>.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li>msg (str): Exit message.</li>
 </ul>
@@ -529,12 +529,12 @@ transparency.</p>
 <dd><p>Writes a list of data to a file as a line in which each value seperated
 by a space.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">myline</span></tt> (iterable): Iterable of items to be written to the line</li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">echo</span></tt> (bool): If <tt class="xref docutils literal"><span class="pre">True</span></tt>, prints the line to the screen.</li>
 </ul>
@@ -547,7 +547,7 @@ by a space.</p>
 <tt class="descname">place_text_image</tt><big>(</big><em>prompt=''</em>, <em>size=None</em>, <em>xoff=0</em>, <em>yoff=0</em>, <em>txtcolor=None</em>, <em>bgcolor=None</em>, <em>font=None</em>, <em>fontname=None</em>, <em>mysurf=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.place_text_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.place_text_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blits a Text object to the surface passed.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">prompt</span></tt> (str): String to be displayed</li>
 <li><tt class="docutils literal"><span class="pre">size</span></tt> (int): text size</li>
@@ -572,7 +572,7 @@ Overrides other font values.</li>
 <dd><p>Creates a Rect from Surface <tt class="docutils literal"><span class="pre">inner_surf</span></tt> and places it onto
 Surface <tt class="docutils literal"><span class="pre">bkgd_surf</span></tt>.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">bkgd_surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to write to.</li>
 <li><tt class="docutils literal"><span class="pre">inner_surf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to write to the other
@@ -593,12 +593,12 @@ surface.</li>
 milliseconds. This function works with .wav files only. It pauses
 the timer.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">sndname</span></tt> (str): The sound name (omit the .wav extension)</li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">pause</span></tt> (int): Time in milliseconds to pause the pygame timer</li>
 </ul>
@@ -613,7 +613,7 @@ the timer.</p>
 <tt class="descname">prompt_text</tt><big>(</big><em>background=None</em>, <em>x=0</em>, <em>y=0</em>, <em>timelimit=None</em>, <em>prompt=''</em>, <em>fontsize=None</em>, <em>maxlength=40</em>, <em>fgcolor=None</em>, <em>centered=False</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.prompt_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.prompt_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Makes an onscreen prompt for users to enter a single line of text.</p>
 <dl class="docutils">
-<dt>Kwargs: </dt>
+<dt>Keyword Arguments: </dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">background</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): the surface that will be
 refreshed; defaults to <tt class="docutils literal"><span class="pre">self.background</span></tt>.</li>
@@ -657,7 +657,7 @@ File should consists of 3 lines, as follows:</p>
 <p>Writes values to <tt class="docutils literal"><span class="pre">self.cond</span></tt>, <tt class="docutils literal"><span class="pre">self.ncond</span></tt>, and <tt class="docutils literal"><span class="pre">self.subj</span></tt>.
 Returns the new lines to be written back to the file.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">lines</span></tt> (list of strs): Lines read in from patterncode file.</li>
 </ul>
@@ -674,7 +674,7 @@ Returns the new lines to be written back to the file.</p>
 passed, the datafile opened is named the current subject
 number.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">name</span></tt> (str): The filename.</li>
 </ul>
@@ -710,12 +710,12 @@ surface. They are thin wrappers to the GaborPatch class.</p>
 <tt class="descname">show_centered_image</tt><big>(</big><em>imagename</em>, <em>bgcolor=None</em>, <em>alpha=None</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.show_centered_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.show_centered_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Centers an image in the screen with a given bgcolor.</p>
 <dl class="docutils">
-<dt>Args: </dt>
+<dt>Required Arguments: </dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Name of image.</li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Background color (name or RGB)</li>
 </ul>
@@ -736,7 +736,7 @@ surface. They are thin wrappers to the GaborPatch class.</p>
 creates a Surface to be blitted on</p>
 </div>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): Surface to blit to. Defaults to <tt class="docutils literal"><span class="pre">self.background</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Mandatory. Name of image (must be in
@@ -763,12 +763,12 @@ height/width. The surface is then returned.</p>
 surface to be blitted on.</p>
 </div>
 <dl class="docutils">
-<dt>Args: </dt>
+<dt>Required Arguments: </dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">imagename</span></tt> (str): Name of image (must be in <tt class="docutils literal"><span class="pre">self.resources</span></tt>).</li>
 </ul>
 </dd>
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">bgcolor</span></tt> (str or tuple): Background color (name or RGB)</li>
 <li><tt class="docutils literal"><span class="pre">xoff</span></tt> (int): Horizontal offset from center.</li>
@@ -807,7 +807,7 @@ creates a Surface to be blitted on</p>
 <dt id="pypsyexp.Experiment.tick">
 <tt class="descname">tick</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#Experiment.tick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.Experiment.tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Waits until a given time based on <tt class="docutils literal"><span class="pre">self.framerate</span></tt>. Useful while in a
-loop, to limit the rate at which it loops.</p>
+loop to limit the rate at which it loops.</p>
 </dd></dl>
 
 <dl class="method">
@@ -816,7 +816,7 @@ loop, to limit the rate at which it loops.</p>
 <dd><p>Blits the surface passed to the default display screen created by 
 the experiment class. Then flips it.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">mysurf</span></tt> (<tt class="docutils literal"><span class="pre">pygame.surface</span></tt>): The surface to be written to the
 screen.</li>
@@ -831,7 +831,7 @@ screen.</li>
 <dd><p>Uploads data to a file storage site.  FTP credentials can be set during
 the initialization of the <tt class="docutils literal"><span class="pre">Experiment</span></tt> object.</p>
 <dl class="docutils">
-<dt>Kwargs:</dt>
+<dt>Keyword Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">host</span></tt> (str): Hostname of ftp server.</li>
 <li><tt class="docutils literal"><span class="pre">username</span></tt> (str): Username on server.</li>
@@ -944,7 +944,7 @@ can then be drawn by callind <tt class="docutils literal"><span class="pre">draw
 <div class="math">
 <p><img src="_images/math/c7447a51ceb05634e52a0d98289de269ca3a0dfd.png" alt="\mathrm{pdf}(\mathcal{N}(\mu, \Sigma), \mathbf{x}) = (2\pi)^{-k/2} |\Sigma|^{- 1/2} e^{-(1/2)(\mathbf{x}-\mu)'\Sigma^{-1}(\mathbf{x}-\mu)}" /></p>
 </div><dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">x</span></tt> - current position in the grid</li>
 <li><tt class="docutils literal"><span class="pre">y</span></tt> - current position in the grid</li>
@@ -965,7 +965,7 @@ can then be drawn by callind <tt class="docutils literal"><span class="pre">draw
 <tt class="descname">draw_gabor</tt><big>(</big><em>freq</em>, <em>angle</em>, <em>scale</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#GaborPatch.draw_gabor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.GaborPatch.draw_gabor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws the gabor patch.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">freq</span></tt> (int): the frequency of the gabor patch.</li>
 <li><tt class="docutils literal"><span class="pre">angle</span></tt> (int): value to determine rotation on the patch. WARNING:
@@ -1000,7 +1000,7 @@ noted as it will make the area of the surface larger.</p>
 <tt class="descclassname">pypsyexp.</tt><tt class="descname">pgColor</tt><big>(</big><em>colorid</em><big>)</big><a class="reference internal" href="_modules/pypsyexp.html#pgColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pypsyexp.pgColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts either an RGB tuple or a string into a valid rgb tuple.</p>
 <dl class="docutils">
-<dt>Args:</dt>
+<dt>Required Arguments:</dt>
 <dd><ul class="first last simple">
 <li><tt class="docutils literal"><span class="pre">colorid</span></tt> (tuple or str): Color name or rgb tuple</li>
 </ul>

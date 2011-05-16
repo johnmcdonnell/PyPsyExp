@@ -50,8 +50,8 @@ class MouseButton:
 def pgColor( colorid ):
     """ 
     Converts either an RGB tuple or a string into a valid rgb tuple.
-
-    Args:
+    
+    Required Arguments:
      * ``colorid`` (tuple or str): Color name or rgb tuple
     
     Returns:
@@ -62,9 +62,9 @@ def pgColor( colorid ):
     if type( colorid ) == str:
         try:
             return pygame.color.THECOLORS[colorid]
-        except KeyError, message:
+        except KeyError, msg:
             warn( "Could not find color %s" % colorid )
-            self.on_exit( message )
+            raise KeyError, msg
     # must be an RGB code...
     elif hasattr( colorid, '__contains__' ):
         if len( colorid ) == 3 or len( colorid ) == 4:
@@ -72,14 +72,13 @@ def pgColor( colorid ):
                 return colorid
             else:
                 msg =  "Invalid rgb key: %s" % colorid
-                self.on_exit( msg )
+                raise Exception, msg
         else:
             msg =  "Invalid rgb key: %s" % colorid
-            self.on_exit( msg )
+            raise Exception, msg
     else:
         msg = "Invalid color value : %s" % colorid
-        self.on_exit( msg )
-
+        raise Exception,  msg
 #------------------------------------------------------------
 # General purpose Experiment class
 #------------------------------------------------------------
@@ -90,7 +89,7 @@ class Experiment:
     #------------------------------------------------------------    
     def __init__(self, nofullscreen, screenres, experimentname, **useroptions):
         """  
-        Args:
+        Required Arguments:
          * nofullscreen (bool):
             * If ``nofullscreen`` is ``True``, the display created will be
               windowed.
@@ -99,7 +98,7 @@ class Experiment:
            pixel dimensions.
          * ``experimentname`` (str): string that will be displayed as the title
            of the new window.
-        Kwargs:
+        Keyword Arguments:
          * ``experimentversion`` (str): The version name for the experiment.
          * ``fontname`` (str): Name of default font.
          * ``fontsize`` (int): Size of default font.
@@ -274,7 +273,7 @@ class Experiment:
         passed, the datafile opened is named the current subject
         number. 
         
-        Kwargs:
+        Keyword Arguments:
          * ``name`` (str): The filename.
         
         Sets:
@@ -296,7 +295,7 @@ class Experiment:
         Loads images and sounds by calling ``load_all_images`` and
         ``load_all_sounds``.
         
-        Kwargs:
+        Keyword Arguments:
          * ``img_directory`` (str): Path to the folder containing
            images.
          * ``snd_directory`` (str): Path to the folder containing
@@ -322,7 +321,7 @@ class Experiment:
        All images are placed in a list called ``self.resources``.  All images
        must be referenced by name, e.g.  ``self.resources['image1.gif']``. 
         
-       Kwargs:
+       Keyword Arguments:
         * ``directory`` (str): Path to the folder containing images.
        
        Modifies:
@@ -354,7 +353,7 @@ class Experiment:
         placed in a list called ``self.resources``. All sounds must be
         referenced by name, i.e.  ``self.resources['sound1.wav'].play()``
         
-        Kwargs:
+        Keyword Arguments:
          * ``directory`` (str): Path to the folder containing images.
         
         Updates:
@@ -395,10 +394,10 @@ class Experiment:
         If neither of these conditions are met, the image will not have
         transparency.
 
-        Args:
+        Required Arguments:
          * ``filename`` (str): path to image file.
         
-        Kwargs:
+        Keyword Arguments:
          * ``colorkey`` (tuple of ints): path to image file.
         
         Returns:
@@ -446,7 +445,7 @@ class Experiment:
         are automatically updated and written back into the file for subsequent
         runnings.
         
-        Kwargs:
+        Keyword Arguments:
          * ``filename`` (str): Path to the patterncode file. Defaults to
            ``patterncode.txt``
         
@@ -486,7 +485,7 @@ class Experiment:
         conditions. The host, username, and password can be set during the
         initialization of the ``Experiment`` object.
         
-        Kwargs:
+        Keyword Arguments:
          * ``host`` (str): web address of file hosting site
          * ``username`` (str): account name on the host site
          * ``password`` (str): password for the account 
@@ -548,7 +547,7 @@ class Experiment:
         Writes values to ``self.cond``, ``self.ncond``, and ``self.subj``.
         Returns the new lines to be written back to the file.
         
-        Args:
+        Required Arguments:
          * ``lines`` (list of strs): Lines read in from patterncode file.
         
         Returns:
@@ -576,10 +575,10 @@ class Experiment:
         Writes a list of data to a file as a line in which each value seperated
         by a space. 
         
-        Args:
+        Required Arguments:
          * ``myline`` (iterable): Iterable of items to be written to the line
         
-        Kwargs:
+        Keyword Arguments:
          * ``echo`` (bool): If ``True``, prints the line to the screen.
         """   
         myline = ' '.join( map(str, myline) )
@@ -598,7 +597,7 @@ class Experiment:
         Uploads data to a file storage site.  FTP credentials can be set during
         the initialization of the ``Experiment`` object.
 
-        Kwargs:
+        Keyword Arguments:
          * ``host`` (str): Hostname of ftp server.
          * ``username`` (str): Username on server.
          * ``password`` (str): Password to server.
@@ -637,7 +636,7 @@ class Experiment:
     def tick( self ):
         """
         Waits until a given time based on ``self.framerate``. Useful while in a
-        loop, to limit the rate at which it loops.
+        loop to limit the rate at which it loops.
         """
         if not self.suppresspygame:
             self.clock.tick( self.framerate )
@@ -650,7 +649,7 @@ class Experiment:
         Blits the surface passed to the default display screen created by 
         the experiment class. Then flips it. 
 
-        Kwargs:
+        Keyword Arguments:
          * ``mysurf`` (``pygame.surface``): The surface to be written to the
            screen.
         """
@@ -665,8 +664,8 @@ class Experiment:
     def place_text_image(self, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None, mysurf=None ):
         """
         Blits a Text object to the surface passed.
-
-        Kwargs:
+        
+        Keyword Arguments:
          * ``prompt`` (str): String to be displayed
          * ``size`` (int): text size
          * ``xoff`` (int): Horizontal offset from center.
@@ -715,7 +714,7 @@ class Experiment:
         """ 
         Creates a Surface with anti-aliased text written on it, and returns it.
         
-        Kwargs:
+        Keyword Arguments:
          * ``font`` (``pygame.font``): The font to use for the text.
          * ``prompt`` (str): String to be displayed
          * ``txtcolor`` (str or tuple): Color for text (RGB or name)
@@ -749,7 +748,7 @@ class Experiment:
         Creates a Rect from Surface ``inner_surf`` and places it onto
         Surface ``bkgd_surf``.
         
-        Kwargs:
+        Keyword Arguments:
          * ``bkgd_surf`` (``pygame.surface``): Surface to write to.
          * ``inner_surf`` (``pygame.surface``): Surface to write to the other
            surface.
@@ -778,10 +777,10 @@ class Experiment:
         milliseconds. This function works with .wav files only. It pauses
         the timer.
         
-        Args:
+        Required Arguments:
          * ``sndname`` (str): The sound name (omit the .wav extension)
         
-        Kwargs:
+        Keyword Arguments:
          * ``pause`` (int): Time in milliseconds to pause the pygame timer
         
         Returns:
@@ -805,10 +804,10 @@ class Experiment:
         """
         Centers an image in the screen with a given bgcolor.
         
-        Args: 
+        Required Arguments: 
          * ``imagename`` (str): Name of image.
         
-        Kwargs:
+        Keyword Arguments:
          * ``bgcolor`` (str or tuple): Background color (name or RGB)
         
         Returns:
@@ -833,10 +832,10 @@ class Experiment:
             This *creates* a Surface object, whereas show_image_add is passed a
             surface to be blitted on.
         
-        Args: 
+        Required Arguments: 
          * ``imagename`` (str): Name of image (must be in ``self.resources``).
         
-        Kwargs:
+        Keyword Arguments:
          * ``bgcolor`` (str or tuple): Background color (name or RGB)
          * ``xoff`` (int): Horizontal offset from center.
          * ``yoff`` (int): Vertical offset from center.
@@ -886,7 +885,7 @@ class Experiment:
             This REQUIRES a Surface object to be passed, whereas show_image
             creates a Surface to be blitted on  
         
-        Kwargs:
+        Keyword Arguments:
          * ``mysurf`` (``pygame.surface``): Surface to blit to. Defaults to ``self.background``
          * ``imagename`` (str): Mandatory. Name of image (must be in
            ``self.resources``).
@@ -943,7 +942,7 @@ class Experiment:
         Creates a Surface with the dimensions of the display screen, fills
         it with a given color, and returns the Surface.  
         
-        Kwargs:
+        Keyword Arguments:
          * ``color`` (str of tuple): Color to draw on screen (name or rgb).
            Defaults to ``self.bgcolor``.
          * ``rewrite_background`` (bool): Whether the surface is written to
@@ -970,7 +969,7 @@ class Experiment:
         it took from the call to the function to the end of the function
         (reaction time; rt) and the response made (res). 
         
-        Kwargs:
+        Keyword Arguments:
          * ``val`` (list or tuple) with coded values, e.g. ``['Left',
            'Right']`` or ``(0, 1)``
         
@@ -986,12 +985,12 @@ class Experiment:
         function to the end of the function (reaction time; rt) and the coded
         version of the response (given in 'val'). 
         
-        Kwargs:
+        Keyword Arguments:
          * ``keys`` (list or tuple of strings) where the keys are the names of
            the keys that will be pressed. Defaults to ``[q, p]``. Keypad
            numbers == keyboard numbers (although this could change) For a full
            list of valid key names, see the libSDL source, under
-           ``$SDLroot/src/SDL_keyboard.c``.
+           ``$SDLroot/src/events/SDL_keyboard.c``.
          * ``val`` (list or tuple) with coded values, e.g. ``['Left',
            'Right']`` or ``(0, 1)``. Defaults to be the same as ``keys``.
         
@@ -1021,7 +1020,7 @@ class Experiment:
         """
         Waits for a key to be pressed, then Returns the key mapping for a
         single pressed letter, ignoring modifier keys. Actual key mappings are
-        found in libSDL source, in: ``$SDLROOT/src/SDL_keyboard.c``.
+        found in libSDL source, in: ``$SDLROOT/src/events/SDL_keyboard.c``.
         """
         pygame.event.clear()
         while 1:
@@ -1040,7 +1039,7 @@ class Experiment:
     def check_for_exit(self):
         """
         Checks for the exit sequence: left shift plus ~.
-        Overload this function to use a different exit keystroke.
+        Override this function to use a different exit keystroke.
         """
         if pygame.key.get_pressed()[pglc.K_LSHIFT] and pygame.key.get_pressed()[pglc.K_BACKQUOTE]:
             self.on_exit( msg="Escape sequence pressed", exception=KeyboardInterrupt)
@@ -1052,7 +1051,7 @@ class Experiment:
         """
         Makes an onscreen prompt for users to enter a single line of text.
         
-        Kwargs: 
+        Keyword Arguments: 
          * ``background`` (``pygame.surface``): the surface that will be
            refreshed; defaults to ``self.background``.
          * ``x`` (int): The horizontal coordinate, determining the left side of
@@ -1106,7 +1105,7 @@ class Experiment:
         Pauses the program for 'pause'-number of milliseconds. Can be exited
         via the default keystroke in``check_for_exit``.
         
-        Kwargs:
+        Keyword Arguments:
          * ``pause`` (int): (in milliseconds) Amount of time to sleep for.
          * ``esckey`` (int; from ``pygame.locals``): A key that, if pressed,
            will end the pause.
@@ -1127,7 +1126,7 @@ class Experiment:
         Draws a square of the size and coordinates requested to the background,
         and returns the result.
         
-        Kwargs:
+        Keyword Arguments:
          * ``surf`` (``pygame.surface``): Surface to draw to. Defaults to
            ``self.background``.
          * ``color`` (str of tuple): Color of rectangle (name or rgb).
@@ -1151,7 +1150,7 @@ class Experiment:
         with a mouse. They can draw by clicking and dragging the mouse.
         Pressing the break_key exits the drawing environment.
         
-        Kwargs:
+        Keyword Arguments:
          * background (``pygame.surface``): The surface to draw to. Defaults to
            ``self.background``.
          * ``color`` (str or tuple): The maker color. Defaults to
@@ -1229,7 +1228,7 @@ class Experiment:
         
         Draws the gabor patch set by 'setup_gabor' 
         
-        Args:
+        Required Arguments:
          * ``freq`` (int): the frequency of the gabor patch
          * ``angle`` (int): value to determine rotation on the patch. WARNING:
            units are degrees/2
@@ -1257,7 +1256,7 @@ class Experiment:
         """ 
         Clears all data that remains on queue and closes ``self.datafile``.
         
-        Kwargs:
+        Keyword Arguments:
          * msg (str): Exit message.
         """
         self.datafile.flush()
@@ -1410,7 +1409,7 @@ class GaborPatch:
         """ 
         Draws the gabor patch.
         
-        Args:
+        Required Arguments:
          * ``freq`` (int): the frequency of the gabor patch.
          * ``angle`` (int): value to determine rotation on the patch. WARNING:
            units are degrees/2.
@@ -1464,7 +1463,7 @@ class GaborPatch:
         .. math::
             \mathrm{pdf}(\mathcal{N}(\mu, \Sigma), \mathbf{x}) = (2\pi)^{-k/2} |\Sigma|^{- 1/2} e^{-(1/2)(\mathbf{x}-\mu)'\Sigma^{-1}(\mathbf{x}-\mu)}
         
-        Args:
+        Required Arguments:
          * ``x`` - current position in the grid
          * ``y`` - current position in the grid
          * ``sigma_y`` - variance in each plane of the grid
@@ -1610,7 +1609,7 @@ class TextPrompt:
         return self._value
 
 def main():
-    warn.warn( "This is the Python Psychology Experimnt library (pypsyexp) developed by the Computational Cognition lab at NYU." )
+    print "This is the Python Psychology Experimnt library (pypsyexp) developed by the Computational Cognition lab at NYU."
 
 if __name__ == '__main__':
     main()
