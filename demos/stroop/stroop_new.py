@@ -80,18 +80,11 @@ class StroopExperiment(Experiment):
     ###########################################################
     # place_text_image_invert
     ###########################################################
-    def place_text_image_invert(self, mysurf=None, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None ):
+    def place_text_image_invert(self, **kwargs):
         """
         Identical to ``pypsyexp.place_text_image``, except it inverts the text.
         """
-        if not mysurf:
-            mysurf = self.background
-        text = self.get_text_image(font=font, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
-        text = pygame.transform.rotate(text, 180)
-        textpos = text.get_rect()
-        textpos.centerx = mysurf.get_rect().centerx + xoff
-        textpos.centery = mysurf.get_rect().centery + yoff
-        mysurf.blit(text, textpos)
+        return self.place_text_image(angle=180, **kwargs)
     
     ###########################################################
     # do_stroop_trial

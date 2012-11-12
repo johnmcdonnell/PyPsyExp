@@ -94,7 +94,7 @@ class StroopExperiment(Experiment):
     #------------------------------------------------------------
     def place_text_image_rotate(self, mysurf, prompt, size, xoff, yoff, txtcolor, bgcolor, angle):
         text = self.get_text_image(pygame.font.Font(None, size), prompt, txtcolor, bgcolor)
-        text=pygame.transform.rotate(text,180)
+        text=pygame.transform.rotate(text, angle)
         textpos = text.get_rect()
         textpos.centerx = mysurf.get_rect().centerx + xoff
         textpos.centery = mysurf.get_rect().centery + yoff

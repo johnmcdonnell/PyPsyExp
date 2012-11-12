@@ -661,7 +661,7 @@ class Experiment:
     #------------------------------------------------------------
     # place_text_image
     #------------------------------------------------------------
-    def place_text_image(self, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None, mysurf=None ):
+    def place_text_image(self, prompt="", size=None, xoff=0, yoff=0, txtcolor=None, bgcolor=None, font=None, fontname=None, mysurf=None, angle=0 ):
         """
         Blits a Text object to the surface passed.
         
@@ -676,6 +676,7 @@ class Experiment:
            Overrides other font values.
          * ``fontname`` (str): Name of font to use.
          * ``mysurf`` (``pygame.surface``): Surface object to be blitted to.
+         * ``angle`` (int): Angle for text to be rotated
         
         Returns:
             A pygame surface object with the text placed on it.
@@ -703,6 +704,8 @@ class Experiment:
         else:
             bgcolor = pgColor( bgcolor )
         text = self.get_text_image(font=thisfont, prompt=prompt, txtcolor=txtcolor, bgcolor=bgcolor)
+        if angle != 0:
+            text = pygame.transform.rotate(text, angle)
         textpos = self.placing_rect(mysurf, text, xoff, yoff)
         mysurf.blit(text, textpos)
         return mysurf
