@@ -9,13 +9,19 @@
 # import modules 
 ###########################################################
 
-import os, sys
-import math
-from random import random, randrange, choice
+import os
+from random import randrange, choice
 import pygame
 from pygame.locals import *
-import tempfile
-from lib.pypsyexp import *
+try:
+    # The pypsyexp lib directory needs to be symlinked or copied to this
+    # directory.
+    from lib.pypsyexp import *
+except ImportError:
+    # This will fail on a FAT file system, you will simply have to copy.
+    # Yes, in fact, I do know how evil this is.
+    os.symlink( "../../lib", "lib")
+    from lib.pypsyexp import *
 
 ###########################################################
 # defines 

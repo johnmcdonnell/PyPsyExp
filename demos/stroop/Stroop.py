@@ -16,7 +16,15 @@ import pygame
 from pygame.locals import *
 import tempfile
 from time import sleep
-from lib.pypsyexp import *
+try:
+    # The pypsyexp lib directory needs to be symlinked or copied to this
+    # directory.
+    from lib.pypsyexp import *
+except ImportError:
+    # This will fail on a FAT file system, you will simply have to copy.
+    # Yes, in fact, I do know how evil this is.
+    os.symlink( "../../lib", "lib")
+    from lib.pypsyexp import *
 
 ###########################################################
 # defines 
